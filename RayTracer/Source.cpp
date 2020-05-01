@@ -3,13 +3,15 @@
 #include <vector>
 #include <fstream>
 #include <Windows.h>
+#include <glm/glm.hpp>
 
-#include "glm/glm.hpp"
+#include "ray.hpp"
 
 using namespace std;
 
 const int WIDTH = 600;
 const int HEIGHT = 600;
+const int MAXDEPTH = 5;
 
 int main()
 {
