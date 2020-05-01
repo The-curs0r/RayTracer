@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 
 #include "ray.hpp"
+#include "object.hpp"
+#include "scene.hpp"
 
 using namespace std;
 
