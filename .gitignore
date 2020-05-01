@@ -10,6 +10,13 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+#glm-Directory
+glm/
+
+#Output images
+*.ppm
+*.png
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
