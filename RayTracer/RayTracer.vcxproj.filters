@@ -23,5 +23,11 @@
     <ClInclude Include="ray.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="object.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
