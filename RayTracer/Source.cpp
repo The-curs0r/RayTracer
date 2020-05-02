@@ -23,7 +23,7 @@ int main()
 	Scene* scene = new Scene();
 
 	sphere* sphere1 = new sphere();
-	sphere1->center = glm::dvec3(10, 0, 0);
+	sphere1->center = glm::dvec3(10, -1, -2);
 	sphere1->radius = 2;
 	sphere1->diffuse = glm::dvec3(.6, .3, .9);
 	sphere1->ambient = glm::dvec3(0.898, 0.517, 0.321);
@@ -32,7 +32,7 @@ int main()
 	sphere1->specular = glm::dvec3(.3, .5, .8);
 
 	sphere* sphere2 = new sphere();
-	sphere2->center = glm::dvec3(5, 0, -2);
+	sphere2->center = glm::dvec3(10, -1, 2);
 	sphere2->ambient = glm::dvec3(.3, .5, .1);
 	sphere2->radius = 1;
 	sphere2->diffuse = glm::dvec3(.6, .3, .9);
@@ -40,17 +40,52 @@ int main()
 	sphere2->shininess = .2;
 	sphere2->specular = glm::dvec3(.3, .3, .3);
 
+	sphere* sphere3 = new sphere();
+	sphere3->center = glm::dvec3(10, 4, 1);
+	sphere3->ambient = glm::dvec3(0.121, 0.278, 0.956);
+	sphere3->radius = 2;
+	sphere3->diffuse = glm::dvec3(0.298, 0.941, 0.784);
+	sphere3->emission = glm::dvec3(.3, .5, .6);
+	sphere3->shininess = .2;
+	sphere3->specular = glm::dvec3(.3, .3, .3);
+
 	light* light1 = new light();
 	light1->attenuation = glm::dvec3(1,.05,.005);
-	light1->source = glm::dvec3(-4, 0, 0);
+	light1->source = glm::dvec3(10, 4, 0);
 	light1->type = 1;
 	light1->color = glm::dvec3(0.321, 0.898, 0.368);
 	light1->intensity = 1.0;
 
+	light* light2 = new light();
+	light2->attenuation = glm::dvec3(1, .05, .005);
+	light2->source = glm::dvec3(10, -4, 0);
+	light2->type = 1;
+	light2->color = glm::dvec3(0.321, 0.898, 0.368);
+	light2->intensity = 1.0;
+
+	light* light3 = new light();
+	light3->attenuation = glm::dvec3(1, .05, .005);
+	light3->source = glm::dvec3(10, 0,-4);
+	light3->type = 1;
+	light3->color = glm::dvec3(0.321, 0.898, 0.368);
+	light3->intensity = 1.0;
+
+	light* light4 = new light();
+	light4->attenuation = glm::dvec3(1, .05, .005);
+	light4->source = glm::dvec3(10, 0, 4);
+	light4->type = 1;
+	light4->color = glm::dvec3(0.321, 0.898, 0.368);
+	light4->intensity = 1.0;
 
 	scene->add(sphere1);
-	//scene->add(sphere2);
-	scene->add(light1);
+	scene->add(sphere2);
+	scene->add(sphere3);
+
+	//scene->add(light1);
+	//scene->add(light2);
+	//scene->add(light3);
+	//scene->add(light4);
+
 
 	ofstream Output_Image("Output.ppm");
 	if (Output_Image.is_open())
@@ -62,7 +97,7 @@ int main()
 			{
 				ray* temp = new ray();
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
-				glm::dvec3 pixColor = scene->intersectray(*temp);
+				glm::dvec3 pixColor = scene->intersectray(*temp,5);
 				Output_Image << (int)(255 * pixColor[0]) << ' ' << (int)(255 * pixColor[1]) << ' ' << (int)(255 * pixColor[2]) << "\n";
 			}
 		}

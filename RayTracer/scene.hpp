@@ -51,8 +51,11 @@ public:
 		return true;
 	}
 
-	const glm::dvec3 intersectray(ray& rayIn) {
+	const glm::dvec3 intersectray(ray& rayIn,int depth) {
 		
+		if (!depth)
+			return glm::dvec3(0, 0, 0);
+
 		double minDistance = FLT_MAX;
 
 		glm::dvec3 outColor = glm::dvec3(0, 0, 0);
@@ -78,7 +81,7 @@ public:
 		}
 		if (int_object != nullptr)
 		{
-			outColor = ((int_object->ambient) +int_object->emission) * 0.5;
+			outColor = (int_object->ambient +int_object->emission) * 0.5;
 
 			std::vector<light*>::iterator lightIterator = lights.begin();
 			
@@ -104,6 +107,11 @@ public:
 					outColor =( outColor + ( (*lightIterator)->intensity *(phong+lambert) / ((*lightIterator)->attenuation[0] + minDistance * (*lightIterator)->attenuation[1] + minDistance * minDistance * (*lightIterator)->attenuation[2]))) * 0.5;
 				}
 			}
+
+			ray* reflected = new ray();
+			reflected->direction = rayIn.direction - 2 * glm::dot(rayIn.direction, normal) * normal;
+			reflected->origin = int_point;
+			outColor = (outColor + intersectray(*reflected, depth - 1))*0.5;
 		}
 		return outColor;
 	}
