@@ -8,6 +8,7 @@
 #include "ray.hpp"
 #include "object.hpp"
 #include "scene.hpp"
+#include "light.hpp"
 
 using namespace std;
 
@@ -22,10 +23,10 @@ int main()
 	Scene* scene = new Scene();
 
 	sphere* sphere1 = new sphere();
-	sphere1->center = glm::dvec3(10, 0, -2);
+	sphere1->center = glm::dvec3(10, 0, 0);
 	sphere1->radius = 2;
 	sphere1->diffuse = glm::dvec3(.6, .3, .9);
-	sphere1->ambient = glm::dvec3(.6, .3, .9);
+	sphere1->ambient = glm::dvec3(0.898, 0.517, 0.321);
 	sphere1->emission = glm::dvec3(.3, .5, .6);
 	sphere1->shininess = .2;
 	sphere1->specular = glm::dvec3(.3, .3, .3);
@@ -39,8 +40,17 @@ int main()
 	sphere2->shininess = .2;
 	sphere2->specular = glm::dvec3(.3, .3, .3);
 
+	light* light1 = new light();
+	light1->attenuation = glm::dvec3(1,1,1);
+	light1->source = glm::dvec3(6, 0, 0);
+	light1->type = 1;
+	light1->color = glm::dvec3(0.321, 0.898, 0.368);
+	light1->intensity = 3.0;
+
+
 	scene->add(sphere1);
-	scene->add(sphere2);
+	//scene->add(sphere2);
+	scene->add(light1);
 
 	ofstream Output_Image("Output.ppm");
 	if (Output_Image.is_open())

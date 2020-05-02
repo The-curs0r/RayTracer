@@ -142,6 +142,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="light.hpp" />
     <ClInclude Include="object.hpp" />
     <ClInclude Include="ray.hpp" />
     <ClInclude Include="scene.hpp" />
