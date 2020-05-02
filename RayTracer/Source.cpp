@@ -29,7 +29,7 @@ int main()
 	sphere1->ambient = glm::dvec3(0.898, 0.517, 0.321);
 	sphere1->emission = glm::dvec3(.3, .5, .6);
 	sphere1->shininess = .2;
-	sphere1->specular = glm::dvec3(.3, .3, .3);
+	sphere1->specular = glm::dvec3(.3, .5, .8);
 
 	sphere* sphere2 = new sphere();
 	sphere2->center = glm::dvec3(5, 0, -2);
@@ -41,11 +41,11 @@ int main()
 	sphere2->specular = glm::dvec3(.3, .3, .3);
 
 	light* light1 = new light();
-	light1->attenuation = glm::dvec3(1,1,1);
-	light1->source = glm::dvec3(6, 0, 0);
+	light1->attenuation = glm::dvec3(1,.05,.005);
+	light1->source = glm::dvec3(-4, 0, 0);
 	light1->type = 1;
 	light1->color = glm::dvec3(0.321, 0.898, 0.368);
-	light1->intensity = 3.0;
+	light1->intensity = 1.0;
 
 
 	scene->add(sphere1);
@@ -61,7 +61,7 @@ int main()
 			for (int j = 0; j < WIDTH; j++)
 			{
 				ray* temp = new ray();
-				temp->raythrough(CAMERA, i + .5, j + .5, WIDTH, HEIGHT);
+				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
 				glm::dvec3 pixColor = scene->intersectray(*temp);
 				Output_Image << (int)(255 * pixColor[0]) << ' ' << (int)(255 * pixColor[1]) << ' ' << (int)(255 * pixColor[2]) << "\n";
 			}

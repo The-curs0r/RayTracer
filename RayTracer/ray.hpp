@@ -19,8 +19,8 @@ public:
 
 		//Creating coordiante frame
 		glm::dvec3 w = glm::normalize(a);
-		glm::dvec3 u = glm::normalize(glm::cross(b, w));
-		glm::dvec3 v = glm::cross(w, u);
+		glm::dvec3 u = glm::normalize(glm::cross(w, b));
+		glm::dvec3 v = glm::cross(u, w);
 
 
 		double fovx = 2 * glm::atan(tan(glm::radians(cam[9]) * 0.5) * (width / height));
