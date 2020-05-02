@@ -23,35 +23,62 @@ int main()
 	Scene* scene = new Scene();
 
 	sphere* sphere1 = new sphere();
-	sphere1->center = glm::dvec3(10, -1, -2);
+	sphere1->center = glm::dvec3(10, 2.2, -1);
 	sphere1->radius = 2;
 	sphere1->diffuse = glm::dvec3(.6, .3, .9);
 	sphere1->ambient = glm::dvec3(0.898, 0.517, 0.321);
 	sphere1->emission = glm::dvec3(.3, .5, .6);
 	sphere1->shininess = .2;
 	sphere1->specular = glm::dvec3(.3, .5, .8);
+	sphere1->reflectivity = 0;
 
 	sphere* sphere2 = new sphere();
-	sphere2->center = glm::dvec3(10, -1, 2);
+	sphere2->center = glm::dvec3(10, 2, 2);
 	sphere2->ambient = glm::dvec3(.3, .5, .1);
 	sphere2->radius = 1;
 	sphere2->diffuse = glm::dvec3(.6, .3, .9);
 	sphere2->emission = glm::dvec3(.3, .5, .6);
 	sphere2->shininess = .2;
 	sphere2->specular = glm::dvec3(.3, .3, .3);
+	sphere2->reflectivity = 0.1;
 
 	sphere* sphere3 = new sphere();
-	sphere3->center = glm::dvec3(10, 4, 1);
+	sphere3->center = glm::dvec3(8, 2, 0);
 	sphere3->ambient = glm::dvec3(0.121, 0.278, 0.956);
-	sphere3->radius = 2;
+	sphere3->radius = 0.5;
 	sphere3->diffuse = glm::dvec3(0.298, 0.941, 0.784);
 	sphere3->emission = glm::dvec3(.3, .5, .6);
 	sphere3->shininess = .2;
 	sphere3->specular = glm::dvec3(.3, .3, .3);
+	sphere3->reflectivity = 0.3;
+
+	triangle* tri1 = new triangle();
+	tri1->ambient = glm::dvec3(0.321, 0.898, 0.368);
+	tri1->diffuse = glm::dvec3(0.298, 0.941, 0.784);
+	tri1->emission = glm::dvec3(0,0,0);
+	tri1->shininess = .2;
+	tri1->specular = glm::dvec3(.3, .3, .3);
+	tri1->reflectivity = 0;
+	tri1->v1 = glm::dvec3(10, -1,2 );
+	tri1->v2 = glm::dvec3(12, -1,2 );
+	tri1->v3 = glm::dvec3(10, -1,-2 );
+	tri1->normal = glm::normalize((glm::cross(tri1->v2 - tri1->v1, tri1->v3 - tri1->v1)));
+
+	triangle* tri2 = new triangle();
+	tri2->ambient = glm::dvec3(0.321, 0.898, 0.368);
+	tri2->diffuse = glm::dvec3(.6, .3, .9);
+	tri2->emission = glm::dvec3(0.321, 0.898, 0.368);
+	tri2->shininess = .2;
+	tri2->specular = glm::dvec3(.3, .3, .3);
+	tri2->reflectivity = 0;
+	tri2->v1 = glm::dvec3(-10, -1,-10 );
+	tri2->v2 = glm::dvec3(-10, -1,10 );
+	tri2->v3 = glm::dvec3(10, -1,10 );
+	tri2->normal = glm::normalize((glm::cross(tri2->v2 - tri2->v1, tri2->v3 - tri2->v1)));
 
 	light* light1 = new light();
 	light1->attenuation = glm::dvec3(1,.05,.005);
-	light1->source = glm::dvec3(10, 4, 0);
+	light1->source = glm::dvec3(-4, 0, 0);
 	light1->type = 1;
 	light1->color = glm::dvec3(0.321, 0.898, 0.368);
 	light1->intensity = 1.0;
@@ -79,7 +106,10 @@ int main()
 
 	scene->add(sphere1);
 	scene->add(sphere2);
-	scene->add(sphere3);
+	//scene->add(sphere3);
+
+	//scene->add(tri1);
+	//scene->add(tri2);
 
 	//scene->add(light1);
 	//scene->add(light2);
@@ -97,7 +127,7 @@ int main()
 			{
 				ray* temp = new ray();
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
-				glm::dvec3 pixColor = scene->intersectray(*temp,5);
+				glm::dvec3 pixColor = scene->intersectray(*temp,2);
 				Output_Image << (int)(255 * pixColor[0]) << ' ' << (int)(255 * pixColor[1]) << ' ' << (int)(255 * pixColor[2]) << "\n";
 			}
 		}

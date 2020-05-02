@@ -69,7 +69,7 @@ public:
 			//Add interesection with objects here
 			double intersection = (*objIterator)->intersect(rayIn,normal);
 
-			if (intersection < minDistance && intersection > 0 && intersection>epsilon)
+			if (intersection < minDistance && intersection > 0  )
 			{
 				minDistance = intersection;
 				int_object = *objIterator;
@@ -111,7 +111,7 @@ public:
 			ray* reflected = new ray();
 			reflected->direction = rayIn.direction - 2 * glm::dot(rayIn.direction, normal) * normal;
 			reflected->origin = int_point;
-			outColor = (outColor + intersectray(*reflected, depth - 1))*0.5;
+			outColor = outColor + (int_object->reflectivity)*intersectray(*reflected, depth - 1);
 		}
 		return outColor;
 	}
