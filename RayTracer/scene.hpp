@@ -111,7 +111,7 @@ public:
 			ray* reflected = new ray();
 			reflected->direction = rayIn.direction - 2 * glm::dot(rayIn.direction, normal) * normal;
 			reflected->origin = int_point;
-			outColor = outColor + (int_object->reflectivity)*intersectray(*reflected, depth - 1);
+			outColor = (outColor + (int_object->reflectivity)*intersectray(*reflected, depth - 1))/ (int_object->reflectivity+1);
 		}
 		return outColor;
 	}

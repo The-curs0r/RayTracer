@@ -13,6 +13,9 @@
 #glm-Directory
 glm/
 
+#Output-Directory
+Outputs/
+
 #Output images
 *.ppm
 *.png

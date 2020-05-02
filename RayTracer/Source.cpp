@@ -12,8 +12,8 @@
 
 using namespace std;
 
-const int WIDTH = 600;
-const int HEIGHT = 600;
+const int WIDTH = 1920;
+const int HEIGHT = 1080;
 const int MAXDEPTH = 5;
 double CAMERA[] = { -4, 0, 0, 1, 0, 0, 0, 1, 0, 30 };
 
@@ -23,19 +23,19 @@ int main()
 	Scene* scene = new Scene();
 
 	sphere* sphere1 = new sphere();
-	sphere1->center = glm::dvec3(10, 2.2, -1);
-	sphere1->radius = 2;
+	sphere1->center = glm::dvec3(2,0, 1);
+	sphere1->radius = .5;
 	sphere1->diffuse = glm::dvec3(.6, .3, .9);
 	sphere1->ambient = glm::dvec3(0.898, 0.517, 0.321);
 	sphere1->emission = glm::dvec3(.3, .5, .6);
 	sphere1->shininess = .2;
 	sphere1->specular = glm::dvec3(.3, .5, .8);
-	sphere1->reflectivity = 0;
+	sphere1->reflectivity = 0.2;
 
 	sphere* sphere2 = new sphere();
-	sphere2->center = glm::dvec3(10, 2, 2);
+	sphere2->center = glm::dvec3(10, 0, 2);
 	sphere2->ambient = glm::dvec3(.3, .5, .1);
-	sphere2->radius = 1;
+	sphere2->radius = 2;
 	sphere2->diffuse = glm::dvec3(.6, .3, .9);
 	sphere2->emission = glm::dvec3(.3, .5, .6);
 	sphere2->shininess = .2;
@@ -50,7 +50,7 @@ int main()
 	sphere3->emission = glm::dvec3(.3, .5, .6);
 	sphere3->shininess = .2;
 	sphere3->specular = glm::dvec3(.3, .3, .3);
-	sphere3->reflectivity = 0.3;
+	sphere3->reflectivity = 0.5;
 
 	triangle* tri1 = new triangle();
 	tri1->ambient = glm::dvec3(0.321, 0.898, 0.368);
@@ -106,16 +106,25 @@ int main()
 
 	scene->add(sphere1);
 	scene->add(sphere2);
-	//scene->add(sphere3);
+	scene->add(sphere3);
 
 	//scene->add(tri1);
 	//scene->add(tri2);
 
 	//scene->add(light1);
-	//scene->add(light2);
+	scene->add(light2);
 	//scene->add(light3);
 	//scene->add(light4);
 
+	double jitterMatrix[5 * 2] = {
+	0, 0,
+	-1.0 / 4.0,  3.0 / 4.0,
+	 3.0 / 4.0,  1.0 / 3.0,
+	-3.0 / 4.0, -1.0 / 4.0,
+	 1.0 / 4.0, -3.0 / 4.0,
+	};
+
+	const int samples = 5;
 
 	ofstream Output_Image("Output.ppm");
 	if (Output_Image.is_open())
@@ -125,10 +134,14 @@ int main()
 		{
 			for (int j = 0; j < WIDTH; j++)
 			{
-				ray* temp = new ray();
-				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
-				glm::dvec3 pixColor = scene->intersectray(*temp,2);
-				Output_Image << (int)(255 * pixColor[0]) << ' ' << (int)(255 * pixColor[1]) << ' ' << (int)(255 * pixColor[2]) << "\n";
+				glm::dvec3 pixColor = glm::dvec3(0, 0, 0);
+				for (int sample = 0; sample < 5; ++sample) {
+					ray* temp = new ray();
+					temp->raythrough(CAMERA, i+ jitterMatrix[2 * sample], j+ jitterMatrix[2 * sample+1], WIDTH, HEIGHT);
+					pixColor += scene->intersectray(*temp, 4);
+					//pixColor /= 2.0;
+				}
+				Output_Image << (int)(255 * pixColor[0]/samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
 			}
 		}
 	}
