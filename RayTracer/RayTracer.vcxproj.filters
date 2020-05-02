@@ -32,5 +32,8 @@
     <ClInclude Include="light.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="progressbar.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

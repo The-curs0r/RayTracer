@@ -9,6 +9,7 @@
 #include "object.hpp"
 #include "scene.hpp"
 #include "light.hpp"
+#include "progressbar.hpp"
 
 using namespace std;
 
@@ -116,6 +117,7 @@ int main()
 	//scene->add(light3);
 	//scene->add(light4);
 
+	//SSAA Setup
 	double jitterMatrix[5 * 2] = {
 	0, 0,
 	-1.0 / 4.0,  3.0 / 4.0,
@@ -123,18 +125,26 @@ int main()
 	-3.0 / 4.0, -1.0 / 4.0,
 	 1.0 / 4.0, -3.0 / 4.0,
 	};
-
 	const int samples = 5;
+
+	//ProgressBar
+	progresscpp::ProgressBar progressBar(HEIGHT, 70, '#', '-');
 
 	ofstream Output_Image("Output.ppm");
 	if (Output_Image.is_open())
 	{
 		Output_Image << "P3\n" << WIDTH << " " << HEIGHT << " 255\n";
+
 		for (int i = 0; i < HEIGHT; i++)
 		{
+			++progressBar;
+			progressBar.display();
+
 			for (int j = 0; j < WIDTH; j++)
 			{
 				glm::dvec3 pixColor = glm::dvec3(0, 0, 0);
+
+				//Implemeted (Fixed) SSAA (Super Sampling Anti Aliasing)       //Randomize Later
 				for (int sample = 0; sample < 5; ++sample) {
 					ray* temp = new ray();
 					temp->raythrough(CAMERA, i+ jitterMatrix[2 * sample], j+ jitterMatrix[2 * sample+1], WIDTH, HEIGHT);
@@ -144,6 +154,7 @@ int main()
 				Output_Image << (int)(255 * pixColor[0]/samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
 			}
 		}
+		progressBar.done();
 	}
 	Output_Image.close();
 	WinExec("cd ..", 1);

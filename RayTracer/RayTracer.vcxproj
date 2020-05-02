@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="light.hpp" />
     <ClInclude Include="object.hpp" />
+    <ClInclude Include="progressbar.hpp" />
     <ClInclude Include="ray.hpp" />
     <ClInclude Include="scene.hpp" />
   </ItemGroup>
