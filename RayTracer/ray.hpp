@@ -22,7 +22,6 @@ public:
 		glm::dvec3 u = glm::normalize(glm::cross(b, w));
 		glm::dvec3 v = glm::cross(w, u);
 
-
 		double fovx = 2 * glm::atan(tan(glm::radians(cam[9]) * 0.5) * (width / height));
 		double fovy = glm::radians(cam[9]);
 

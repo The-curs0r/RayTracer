@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <vector>
 
-#define epsilon pow(10,-6)
+#define epsilon pow(10,-8)
 
 class Scene {
 public:
@@ -53,7 +53,7 @@ public:
 
 	const glm::dvec3 intersectray(ray& rayIn,int depth) {
 		
-		if (!depth)
+		if (depth==0)
 			return glm::dvec3(0, 0, 0);
 
 		double minDistance = FLT_MAX;
@@ -66,10 +66,10 @@ public:
 		glm::dvec3 int_point;
 		glm::dvec3 normal;
 		for (objIterator = objects.begin();objIterator != objects.end(); objIterator++) {
-			//Add interesection with objects here
+			//Interesection with objects here
 			double intersection = (*objIterator)->intersect(rayIn,normal);
 
-			if (intersection < minDistance && intersection > 0  )
+			if (intersection < minDistance && intersection > epsilon  )
 			{
 				minDistance = intersection;
 				int_object = *objIterator;
@@ -104,14 +104,17 @@ public:
 					if (glm::dot(normal, H) > 0)
 						phong = (*lightIterator)->color * int_object->specular * pow(glm::dot(normal, H), int_object->shininess);	
 
-					outColor =( outColor + ( (*lightIterator)->intensity *(phong+lambert) / ((*lightIterator)->attenuation[0] + minDistance * (*lightIterator)->attenuation[1] + minDistance * minDistance * (*lightIterator)->attenuation[2]))) * 0.5;
+					outColor += ((*lightIterator)->intensity *(phong+lambert) / ((*lightIterator)->attenuation[0] + minDistance * (*lightIterator)->attenuation[1] + minDistance * minDistance * (*lightIterator)->attenuation[2])) * 0.5;
 				}
 			}
 
+			rayIn.direction = glm::normalize(rayIn.direction);
+			normal = glm::normalize(normal);
+
 			ray* reflected = new ray();
-			reflected->direction = rayIn.direction - 2 * glm::dot(rayIn.direction, normal) * normal;
+			reflected->direction = rayIn.direction - (2 * glm::dot(rayIn.direction, normal)) * normal;
 			reflected->origin = int_point;
-			outColor = (outColor + (int_object->reflectivity)*intersectray(*reflected, depth - 1))/ (int_object->reflectivity+1);
+			outColor += ((int_object->reflectivity)*intersectray(*reflected, depth - 1));
 		}
 		return outColor;
 	}

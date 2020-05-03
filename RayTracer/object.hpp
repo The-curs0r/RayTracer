@@ -82,6 +82,8 @@ public:
 	glm::dvec3 v3;
 	glm::dvec3 normal;
 
+
+	//Check 
 	double intersect(const ray& ray, glm::dvec3& normal_ret) const {
 
 		glm::dvec3 E1 = v2 - v1;
