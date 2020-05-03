@@ -4,7 +4,7 @@
 #include "ray.hpp"
 #include <glm/glm.hpp>
 
-#define epsilon pow(10,-6)
+#define epsilon pow(10,-12)
 
 class object {
 public:
@@ -15,8 +15,7 @@ public:
 	glm::dmat4 tranform;
 	double reflectivity;
 	double shininess;
-	virtual double intersect(const ray& ray, glm::dvec3& normal) const = 0;
-	virtual bool check(glm::dvec3& point) const = 0;
+	virtual double intersect( ray& ray, glm::dvec3& normal)  = 0;
 };
 
 class sphere : public object {
@@ -24,7 +23,7 @@ public:
 	glm::dvec3 center;
 	double radius;
 
-	double intersect(const ray& ray, glm::dvec3& normal) const {
+	double intersect( ray& ray, glm::dvec3& normal)  {
 		
 		/*glm::dvec3 toCenter = center - ray.origin;
 		double tca = glm::dot(toCenter, ray.direction);
@@ -66,13 +65,6 @@ public:
 		normal = glm::normalize(ray.origin + t * ray.direction - center);
 		return t;
 	}
-
-	bool check(glm::dvec3& point) const {
-		double val = pow((point[0] - center[0]), 2) + pow((point[1] - center[1]), 2) + pow((point[2] - center[2]), 2);
-		if (val < pow(radius,2))
-			return false;
-		return true;
-	}
 };
 
 class triangle : public object {
@@ -84,7 +76,7 @@ public:
 
 
 	//Check 
-	double intersect(const ray& ray, glm::dvec3& normal_ret) const {
+	double intersect( ray& ray, glm::dvec3& normal_ret)  {
 
 		glm::dvec3 E1 = v2 - v1;
 		glm::dvec3 E2 = v3 - v1;
@@ -103,10 +95,6 @@ public:
 		double t = glm::dot(AO, norm) * inndet;
 
 		return((det >= epsilon && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0) ? t : -1);
-	}
-
-	bool check(glm::dvec3& point) const {
-		return true;
 	}
 };
 
