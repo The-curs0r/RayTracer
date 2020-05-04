@@ -10,31 +10,42 @@
 #include "scene.hpp"
 #include "light.hpp"
 #include "progressbar.hpp"
+#include "objImporter.hpp"
 
 using namespace std;
 
-const int WIDTH = 640;
-const int HEIGHT = 480;
-const int MAXDEPTH = 5;
-double CAMERA[] = { -4, 0, 0, 0, 0, 0, 0, 1, 0, 30 };
+const int WIDTH = 300;
+const int HEIGHT = 300;
+const int MAXDEPTH = 3;
+double CAMERA[] = { -4, 0, 0, 0, 0, 0, 0, 0, 1, 45 };
 
 int main()
 {
 
 	Scene* scene = new Scene();
 
+	loadOBJ("./Models/Cube6.obj", scene);
+
 	sphere* sphere1 = new sphere();
-	sphere1->center = glm::dvec3(10, 1.2, 0.75);
-	sphere1->ambient = glm::dvec3(.3, .5, .6);
-	sphere1->radius = 2;
+	sphere1->center = glm::dvec3(3, -0.5, 1.5);
+	sphere1->ambient = glm::dvec3(0.121, 0.278, 0.956);
+	sphere1->radius = 1;
 	sphere1->diffuse = glm::dvec3(.6, .3, .9);
-	sphere1->emission = glm::dvec3(.3, .5, .6);
+	sphere1->emission = glm::dvec3(0.121, 0.278, 0.956);
 	sphere1->shininess = .2;
 	sphere1->specular = glm::dvec3(.3, .3, .3);
 	sphere1->reflectivity = 0.1;
+	scene->add(sphere1);
+	light* light1 = new light();
+	light1->attenuation = glm::dvec3(1, .05, .1);
+	light1->source = glm::dvec3(-4, 0, 0);
+	light1->type = 1;
+	light1->color = glm::dvec3(0.321, 0.898, 0.368);
+	light1->intensity = 1.0;
+	//scene->add(light1);
 
-	sphere* sphere2 = new sphere();
-	sphere2->center = glm::dvec3(6, 1, -0.75);
+	/*sphere* sphere2 = new sphere();
+	sphere2->center = glm::dvec3(6, 2, -0.75);
 	sphere2->ambient = glm::dvec3(.3, .5, .6);
 	sphere2->radius = .5;
 	sphere2->diffuse = glm::dvec3(.6, .3, .9);
@@ -44,7 +55,7 @@ int main()
 	sphere2->reflectivity = 0.2;
 
 	sphere* sphere3 = new sphere();
-	sphere3->center = glm::dvec3(6, -0.5, -0.75);
+	sphere3->center = glm::dvec3(6, 0, -0.75);
 	sphere3->ambient = glm::dvec3(0.121, 0.278, 0.956);
 	sphere3->radius = 1;
 	sphere3->diffuse = glm::dvec3(.6, .3, .9);
@@ -54,7 +65,7 @@ int main()
 	sphere3->reflectivity = 0.7;
 
 	sphere* sphere4 = new sphere();
-	sphere4->center = glm::dvec3(2, -0.6, -0.75);
+	sphere4->center = glm::dvec3(0, 0, -1);
 	sphere4->ambient = glm::dvec3(.3, .5, .6);
 	sphere4->radius = 0.5;
 	sphere4->diffuse = glm::dvec3(.6, .3, .9);
@@ -87,12 +98,7 @@ int main()
 	tri2->v3 = glm::dvec3(25 ,-1,-5 );
 	tri2->normal = glm::normalize((glm::cross(tri2->v2 - tri2->v1, tri2->v3 - tri2->v1)));
 
-	light* light1 = new light();
-	light1->attenuation = glm::dvec3(1,.05,.1);
-	light1->source = glm::dvec3(-4, 0, 0);
-	light1->type = 1;
-	light1->color = glm::dvec3(0.321, 0.898, 0.368);
-	light1->intensity = 3.0;
+	
 
 	light* light2 = new light();
 	light2->attenuation = glm::dvec3(1, .05, .005);
@@ -115,19 +121,17 @@ int main()
 	light4->color = glm::dvec3(0.321, 0.898, 0.368);
 	light4->intensity = 1.0;
 
-	scene->add(sphere1);
 	//scene->add(sphere2);
 	//scene->add(sphere4);
 	//scene->add(sphere3);
 	
 
-	scene->add(tri1);
-	scene->add(tri2);
+	//scene->add(tri1);
+	//scene->add(tri2);
 
-	//scene->add(light1);
 	//scene->add(light2);
 	//scene->add(light3);
-	//scene->add(light4);
+	//scene->add(light4);*/
 
 	//SSAA Setup
 	double jitterMatrix[5 * 2] = {
@@ -140,7 +144,7 @@ int main()
 	const int samples = 16;
 
 	double focallength = 10.0;
-	double aperture = 0.01;
+	double aperture = 0.05;
 	double planedis = glm::length(glm::dvec3(CAMERA[0], CAMERA[1], CAMERA[2]) - glm::dvec3(CAMERA[3], CAMERA[4], CAMERA[5]));
 
 	//ProgressBar
@@ -151,7 +155,7 @@ int main()
 	{
 		Output_Image << "P3\n" << WIDTH << " " << HEIGHT << " 255\n";
 
-		for (int i = 0; i < HEIGHT; i++)
+		for (int i = HEIGHT-1; i >=0; i--)
 		{
 			++progressBar;
 			progressBar.display();
@@ -160,8 +164,8 @@ int main()
 			{
 				glm::dvec3 pixColor = glm::dvec3(0, 0, 0);
 
-				/*/Simple
-				ray* temp = new ray();
+				//Simple
+				/*ray* temp = new ray();
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
 				pixColor = scene->intersectray(*temp, 4);*/
 
@@ -176,7 +180,7 @@ int main()
 					glm::dvec3 focalPt = temp->origin + (focallength) * temp->direction;
 
 					//Depth Of Field
-					for (int divs = 0;divs < 16;divs++) {
+					for (int divs = 0;divs < samples;divs++) {
 						
 						ray* rayInt = new ray();
 						glm::dvec3 shift = glm::dvec3(((double)rand() / (RAND_MAX)) - 0.5, ((double)rand() / (RAND_MAX)) - 0.5, ((double)rand() / (RAND_MAX)) - 0.5);
@@ -184,7 +188,7 @@ int main()
 						rayInt->direction = glm::normalize(focalPt - rayInt->origin);
 						//std::cout << &rayInt << "\n";
 						//return 0;
-						pixColor += scene->intersectray(*rayInt, 4);
+						pixColor += scene->intersectray(*rayInt, MAXDEPTH);
 						delete rayInt;
 					}
 					delete temp;

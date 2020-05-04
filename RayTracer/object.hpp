@@ -15,7 +15,7 @@ public:
 	glm::dmat4 tranform;
 	double reflectivity;
 	double shininess;
-	virtual double intersect( ray& ray, glm::dvec3& normal)  = 0;
+	virtual double intersect( ray& ray, glm::dvec3& normal) = 0;
 };
 
 class sphere : public object {
@@ -80,9 +80,8 @@ public:
 
 		glm::dvec3 E1 = v2 - v1;
 		glm::dvec3 E2 = v3 - v1;
-
 		glm::dvec3 norm = (glm::cross(E1, E2));
-		normal_ret = glm::normalize(norm);
+		normal_ret = glm::normalize(normal);
 		double det = -glm::dot(ray.direction, norm);
 		double inndet = 1.0 / det;
 

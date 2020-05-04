@@ -19,6 +19,7 @@ Outputs/
 #Output images
 *.ppm
 *.png
+*.mtl
 
 # Build results
 [Dd]ebug/

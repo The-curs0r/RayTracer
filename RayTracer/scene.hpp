@@ -44,10 +44,12 @@ public:
 			{
 				min_t = t;
 				(nearest_obj) = *it;
+				delete nray;
 				return false;  //OBJECT IS NOT VISIBLE
 			}
 
 		}
+		delete nray;
 		return true;
 	}
 
@@ -80,7 +82,7 @@ public:
 		}
 		if (int_object != nullptr)
 		{
-			outColor = (int_object->ambient );
+			outColor = (int_object->ambient+int_object->emission);
 
 			std::vector<light*>::iterator lightIterator = lights.begin();
 			
@@ -114,8 +116,9 @@ public:
 			reflected->direction = rayIn.direction - (2 * glm::dot(rayIn.direction, int_normal)) * int_normal;
 			reflected->origin = int_point;
 			outColor += ((int_object->reflectivity)*intersectray(*reflected, depth - 1));
+			
 			delete reflected;
-			//delete int_object;
+			
 		}
 		return outColor;
 	}
