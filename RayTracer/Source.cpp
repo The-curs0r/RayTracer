@@ -16,65 +16,70 @@ using namespace std;
 
 const int WIDTH = 300;
 const int HEIGHT = 300;
-const int MAXDEPTH = 3;
-double CAMERA[] = { -4, 0, 0, 0, 0, 0, 0, 0, 1, 45 };
+const int MAXDEPTH = 1;
+double CAMERA[] = { -4, 0, 0, 0, 0, 0, 0, 1, 0, 45 };
+glm::dvec3 Color[HEIGHT][WIDTH];
 
 int main()
 {
 
 	Scene* scene = new Scene();
 
-	loadOBJ("./Models/Cube6.obj", scene);
+	loadOBJ("./Models/Torus.obj", scene);
 
 	sphere* sphere1 = new sphere();
-	sphere1->center = glm::dvec3(3, -0.5, 1.5);
-	sphere1->ambient = glm::dvec3(0.121, 0.278, 0.956);
-	sphere1->radius = 1;
+	sphere1->center = glm::dvec3(4, -0.5, 1.5);
+	sphere1->ambient = glm::dvec3(0.0121, 0.0278, 0.0956);
+	sphere1->radius =2;
 	sphere1->diffuse = glm::dvec3(.6, .3, .9);
-	sphere1->emission = glm::dvec3(0.121, 0.278, 0.956);
+	sphere1->emission = glm::dvec3(0,0,0);
 	sphere1->shininess = .2;
-	sphere1->specular = glm::dvec3(.3, .3, .3);
-	sphere1->reflectivity = 0.1;
-	scene->add(sphere1);
+	sphere1->specular = glm::dvec3(0, 0, 0);
+	sphere1->reflectivity = 0;
+	//scene->add(sphere1);
+
 	light* light1 = new light();
-	light1->attenuation = glm::dvec3(1, .05, .1);
-	light1->source = glm::dvec3(-4, 0, 0);
+	light1->attenuation = glm::dvec3(-2, 0, 0);
+	light1->source = glm::dvec3(0, 0, 0);
 	light1->type = 1;
 	light1->color = glm::dvec3(0.321, 0.898, 0.368);
 	light1->intensity = 1.0;
-	//scene->add(light1);
+	scene->add(light1);
 
-	/*sphere* sphere2 = new sphere();
-	sphere2->center = glm::dvec3(6, 2, -0.75);
-	sphere2->ambient = glm::dvec3(.3, .5, .6);
-	sphere2->radius = .5;
+	sphere* sphere2 = new sphere();
+	sphere2->center = glm::dvec3(2, -0.25, 0.75);
+	sphere2->ambient = glm::dvec3(0.0121, 0.0278, 0.0956);
+	sphere2->radius = .2;
 	sphere2->diffuse = glm::dvec3(.6, .3, .9);
-	sphere2->emission = glm::dvec3(.3, .5, .6);
+	sphere2->emission = glm::dvec3(0,0,0);
 	sphere2->shininess = .2;
 	sphere2->specular = glm::dvec3(.3, .3, .3);
-	sphere2->reflectivity = 0.2;
+	sphere2->reflectivity = 0;
+	//scene->add(sphere2);
 
 	sphere* sphere3 = new sphere();
-	sphere3->center = glm::dvec3(6, 0, -0.75);
-	sphere3->ambient = glm::dvec3(0.121, 0.278, 0.956);
-	sphere3->radius = 1;
-	sphere3->diffuse = glm::dvec3(.6, .3, .9);
-	sphere3->emission = glm::dvec3(0.121, 0.278, 0.956);
+	sphere3->center = glm::dvec3(7, .5, -2.75);
+	sphere3->ambient = glm::dvec3(0,0,0);
+	sphere3->radius = 2;
+	sphere3->diffuse = glm::dvec3(.2, .7, .3);
+	sphere3->emission = glm::dvec3(0,0,0);
 	sphere3->shininess = .2;
-	sphere3->specular = glm::dvec3(.3, .3, .3);
+	sphere3->specular = glm::dvec3(.43, .13, .32);
 	sphere3->reflectivity = 0.7;
+	//scene->add(sphere3);
 
 	sphere* sphere4 = new sphere();
 	sphere4->center = glm::dvec3(0, 0, -1);
-	sphere4->ambient = glm::dvec3(.3, .5, .6);
+	sphere4->ambient = glm::dvec3(0,0,0);
 	sphere4->radius = 0.5;
-	sphere4->diffuse = glm::dvec3(.6, .3, .9);
-	sphere4->emission = glm::dvec3(0.121, 0.278, 0.956);
-	sphere4->shininess = .2;
-	sphere4->specular = glm::dvec3(.3, .3, .3);
-	sphere4->reflectivity = 0.7;
+	sphere4->diffuse = glm::dvec3(.54, .75, .69);
+	sphere4->emission = glm::dvec3(0,0,0);
+	sphere4->shininess = .5;
+	sphere4->specular = glm::dvec3(.23, .43, .13);
+	sphere4->reflectivity = 0;
+	//scene->add(sphere4);
 
-	triangle* tri1 = new triangle();
+	/*triangle* tri1 = new triangle();
 	tri1->ambient = glm::dvec3(0.321, 0.898, 0.368);
 	tri1->diffuse = glm::dvec3(0.298, 0.941, 0.784);
 	tri1->emission = glm::dvec3(0,0,0);
@@ -141,9 +146,9 @@ int main()
 	-3.0 / 4.0, -1.0 / 4.0,
 	 1.0 / 4.0, -3.0 / 4.0,
 	};
-	const int samples = 16;
+	const int samples = 1;
 
-	double focallength = 10.0;
+	double focallength = 6.0;
 	double aperture = 0.05;
 	double planedis = glm::length(glm::dvec3(CAMERA[0], CAMERA[1], CAMERA[2]) - glm::dvec3(CAMERA[3], CAMERA[4], CAMERA[5]));
 
@@ -165,11 +170,11 @@ int main()
 				glm::dvec3 pixColor = glm::dvec3(0, 0, 0);
 
 				//Simple
-				/*ray* temp = new ray();
+				ray* temp = new ray();
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
-				pixColor = scene->intersectray(*temp, 4);*/
+				pixColor = scene->intersectray(*temp, 4);
 
-				
+				/*
 				//Implemeted (Fixed) SSAA (Super Sampling Anti Aliasing)       //Randomize Later
 				for (int sample = 0; sample < 5; ++sample) {
 
@@ -193,9 +198,17 @@ int main()
 					}
 					delete temp;
 				}
-				pixColor /= 5;
+				pixColor /= 5;*/
+				Color[i][j] = pixColor;
+				//Output_Image << (int)(255 * pixColor[0] / samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
+			}
+		}
 
-				Output_Image << (int)(255 * pixColor[0]/samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
+		for (int i =HEIGHT-1;i >=0;i--)
+		{
+			for (int j = 0;j < WIDTH;j++)
+			{
+				Output_Image << (int)(255 * Color[i][j][0] / samples) << ' ' << (int)(255 * Color[i][j][1] / samples) << ' ' << (int)(255 * Color[i][j][2] / samples) << "\n";
 			}
 		}
 		progressBar.done();

@@ -82,7 +82,7 @@ public:
 		}
 		if (int_object != nullptr)
 		{
-			outColor = (int_object->ambient+int_object->emission);
+			outColor = (int_object->ambient+int_object->emission)*0.5;
 
 			std::vector<light*>::iterator lightIterator = lights.begin();
 			
@@ -100,12 +100,15 @@ public:
 
 					glm::dvec3 lambert = glm::dvec3(0, 0, 0);
 					glm::dvec3 phong = glm::dvec3(0, 0, 0);
-					if(glm::dot(int_normal, L)>0)
+					if (glm::dot(int_normal, L) > 0)
+					{
 						lambert = (*lightIterator)->color * int_object->diffuse * (glm::dot(int_normal, L));
+					}
 					if (glm::dot(int_normal, H) > 0)
-						phong = (*lightIterator)->color * int_object->specular * pow(glm::dot(int_normal, H), int_object->shininess);	
-
-					outColor += ((*lightIterator)->intensity *(phong+lambert) / ((*lightIterator)->attenuation[0] + minDistance * (*lightIterator)->attenuation[1] + minDistance * minDistance * (*lightIterator)->attenuation[2])) * 0.5;
+					{
+						phong = (*lightIterator)->color * int_object->specular * pow(glm::dot(int_normal, H), int_object->shininess);
+					}
+					outColor += ((*lightIterator)->intensity *(phong+lambert) / ((*lightIterator)->attenuation[0] + minDistance * (*lightIterator)->attenuation[1] + minDistance * minDistance * (*lightIterator)->attenuation[2])) ;
 				}
 			}
 

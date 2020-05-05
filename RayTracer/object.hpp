@@ -33,7 +33,7 @@ public:
 		double t1 = tca - thc;
 		double t2 = tca + thc;
 
-		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > t2) std::std::swap(t1, t2);
 
 		if (t1 < 0) {
 			t1 = t2;
@@ -67,7 +67,7 @@ public:
 	}
 };
 
-class triangle : public object {
+class triangle {
 public:
 	glm::dvec3 v1;
 	glm::dvec3 v2;
@@ -96,5 +96,83 @@ public:
 		return((det >= epsilon && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0) ? t : -1);
 	}
 };
+
+//BOUNDING BOX CLASS FOR MESH
+class boundBox {
+public:
+	glm::dvec3 boundMin;
+	glm::dvec3 boundMax;
+	bool intersect(ray& ray) {
+		double tmin = (boundMin[0]-ray.origin[0])/ray.direction[0];
+		double tmax = (boundMax[0] - ray.origin[0]) / ray.direction[0];
+
+		if (tmin > tmax) std::swap(tmin, tmax);
+
+		double tymin = (boundMin[1] - ray.origin[1]) / ray.direction[1];
+		double tymax = (boundMax[1] - ray.origin[1]) / ray.direction[1];
+
+		if (tymin > tymax) std::swap(tymin, tymax);
+
+		if ((tmin > tymax) || (tymin > tmax))
+			return false;
+
+		if (tymin > tmin)
+			tmin = tymin;
+		if (tymax < tmax)
+			tmax = tymax;
+
+		double tzmin = (boundMin[2] - ray.origin[2]) / ray.direction[2];
+		double tzmax = (boundMax[2] - ray.origin[2]) / ray.direction[2];
+
+		if (tzmin > tzmax) std::swap(tzmin, tzmax);
+		
+		if ((tmin > tzmax) || (tzmin > tmax))
+			return false;
+		return true;
+	}
+};
+
+//MESH MADE UP OF ONLY TRIANGLES
+class mesh :public object {
+public:
+	std::vector<triangle*> meshTri;
+	boundBox box;
+
+	void add(triangle* object) {
+		meshTri.push_back(object);
+	}
+
+	double intersect(ray& rayIn, glm::dvec3& normal_ret) {
+		
+		if (box.intersect(rayIn))
+		{
+			std::vector<triangle*>::iterator meshItr = meshTri.begin();
+
+			triangle* int_object = nullptr;
+			glm::dvec3 int_point;
+			glm::dvec3 int_normal;
+			glm::dvec3 normal;
+
+			double minDistance = FLT_MAX;
+
+			for (meshItr = meshTri.begin(); meshItr < meshTri.end(); meshItr++)
+			{
+				double intersection = (*meshItr)->intersect(rayIn, normal);
+				if (intersection < minDistance && intersection > epsilon)
+				{
+					//std::cout << "here";
+					int_normal = normal;
+					minDistance = intersection;
+					normal_ret = int_normal;
+				}
+			}
+			
+			return minDistance;
+		}
+		else
+			return -1;
+	}
+};
+
 
 #endif // !OBJECT_HPP

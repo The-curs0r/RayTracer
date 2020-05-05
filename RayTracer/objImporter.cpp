@@ -109,7 +109,11 @@ bool loadOBJ(const char* path,Scene* scene) {
 			fgets(comment, 1000, file);
 		}
 	}
-
+	mesh* meshtmp = new mesh();
+	meshtmp->box.boundMax = glm::dvec3(FLT_MIN);
+	meshtmp->box.boundMin = glm::dvec3(FLT_MAX);
+	//double xmin=FLT_MIN, ymin = FLT_MIN, zmin = FLT_MIN;
+	//double xmax = FLT_MAX, ymax = FLT_MAX, zmax= FLT_MAX;
 	// For each vertex of each triangle
 	for (unsigned int i = 0; i < vertexIndices.size(); i+=3) {
 
@@ -148,17 +152,31 @@ bool loadOBJ(const char* path,Scene* scene) {
 		glm::dvec3 edge2 = vertex3 - vertex1;
 
 		temptri->normal = glm::normalize(glm::cross(edge1, edge2));
-
-		//Set Other parameters
-		temptri->ambient = glm::dvec3(0.3, 0.6, 0.5 );
-		temptri->reflectivity = 0.5;
-
-		temptri->emission = glm::dvec3(0,0,0);
+		
 		glm::dvec3 avgVecNormal = (normal1 + normal2 + normal3) / 3.0;
 		if (glm::dot(temptri->normal, avgVecNormal) < 0) temptri->normal = -temptri->normal;
-		//std::cout << temptri->normal[0] << temptri->normal[1] << temptri->normal[2];
-		scene->add(temptri);
+		
+		for (int i = 0;i < 3;i++)
+		{
+			if (vertex1[i] <= meshtmp->box.boundMin[i]) meshtmp->box.boundMin[i] = vertex1[i];
+			if (vertex2[i] <= meshtmp->box.boundMin[i]) meshtmp->box.boundMin[i] = vertex2[i];
+			if (vertex3[i] <= meshtmp->box.boundMin[i]) meshtmp->box.boundMin[i] = vertex3[i];
+
+			if (vertex1[i] > meshtmp->box.boundMax[i]) meshtmp->box.boundMax[i] = vertex1[i];
+			if (vertex2[i] > meshtmp->box.boundMax[i]) meshtmp->box.boundMax[i] = vertex2[i];
+			if (vertex3[i] > meshtmp->box.boundMax[i]) meshtmp->box.boundMax[i] = vertex3[i];
+		}
+
+		meshtmp->add(temptri);
 	}
+	//Set Other parameters
+	meshtmp->ambient = glm::dvec3(0.3, 0.6, 0.5);
+	meshtmp->reflectivity = 0.5;
+	meshtmp->emission = glm::dvec3(0, 0, 0);
+	std::cout << meshtmp->box.boundMax[0] << " " << meshtmp->box.boundMax[1] << " " << meshtmp->box.boundMax[2] << " \n";
+	std::cout << meshtmp->box.boundMin[0] << " " << meshtmp->box.boundMin[1] << " " << meshtmp->box.boundMin[2] << " \n";
+	scene->add(meshtmp);
+	std::cout << meshtmp->meshTri.size();
 	fclose(file);
 	return true;
 }
