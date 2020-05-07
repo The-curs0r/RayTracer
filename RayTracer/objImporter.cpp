@@ -141,7 +141,6 @@ bool loadOBJ(const char* path,Scene* scene) {
 		glm::dvec3 normal2 = temp_normals[normalIndex2 - 1];
 		glm::dvec3 normal3 = temp_normals[normalIndex3 - 1];
 
-
 		// Generate triangle and calculate normal
 		triangle* temptri = new triangle();
 		temptri->v1 = vertex1;
@@ -170,13 +169,16 @@ bool loadOBJ(const char* path,Scene* scene) {
 		meshtmp->add(temptri);
 	}
 	//Set Other parameters
-	meshtmp->ambient = glm::dvec3(0.3, 0.6, 0.5);
+	//meshtmp->ambient = glm::dvec3(0.3, 0.6, 0.5);
 	meshtmp->reflectivity = 0.5;
 	meshtmp->emission = glm::dvec3(0, 0, 0);
-	std::cout << meshtmp->box.boundMax[0] << " " << meshtmp->box.boundMax[1] << " " << meshtmp->box.boundMax[2] << " \n";
-	std::cout << meshtmp->box.boundMin[0] << " " << meshtmp->box.boundMin[1] << " " << meshtmp->box.boundMin[2] << " \n";
+
+	meshtmp->diffuse = glm::dvec3(.6, .3, .9);
+	meshtmp->shininess = .2;
+	meshtmp->specular = glm::dvec3(.3, .3, .3);
+
 	scene->add(meshtmp);
-	std::cout << meshtmp->meshTri.size();
+
 	fclose(file);
 	return true;
 }

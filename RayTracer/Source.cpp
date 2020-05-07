@@ -14,42 +14,41 @@
 
 using namespace std;
 
-const int WIDTH = 300;
-const int HEIGHT = 300;
-const int MAXDEPTH = 1;
+const int WIDTH = 600;
+const int HEIGHT = 400;
+const int MAXDEPTH = 3;
 double CAMERA[] = { -4, 0, 0, 0, 0, 0, 0, 1, 0, 45 };
-glm::dvec3 Color[HEIGHT][WIDTH];
+//glm::dvec3 Color[HEIGHT][WIDTH];
 
 int main()
 {
 
 	Scene* scene = new Scene();
-
-	loadOBJ("./Models/Torus.obj", scene);
+	//loadOBJ("./Models/Monkey.obj", scene);
 
 	sphere* sphere1 = new sphere();
-	sphere1->center = glm::dvec3(4, -0.5, 1.5);
-	sphere1->ambient = glm::dvec3(0.0121, 0.0278, 0.0956);
-	sphere1->radius =2;
+	sphere1->center = glm::dvec3(2.2, 1, 1.5);
+	sphere1->radius =1;
 	sphere1->diffuse = glm::dvec3(.6, .3, .9);
 	sphere1->emission = glm::dvec3(0,0,0);
 	sphere1->shininess = .2;
 	sphere1->specular = glm::dvec3(0, 0, 0);
-	sphere1->reflectivity = 0;
+	sphere1->reflectivity = 1;
 	//scene->add(sphere1);
 
 	light* light1 = new light();
-	light1->attenuation = glm::dvec3(-2, 0, 0);
-	light1->source = glm::dvec3(0, 0, 0);
+	light1->attenuation = glm::dvec3(1, 0, 0);
+	light1->source = glm::dvec3(-3, -2, -2);
 	light1->type = 1;
 	light1->color = glm::dvec3(0.321, 0.898, 0.368);
-	light1->intensity = 1.0;
-	scene->add(light1);
+	light1->intensity = 2.0;
+	//scene->add(light1);
+
+	scene->ambientIntensity = 0.1 * 2.0;
 
 	sphere* sphere2 = new sphere();
-	sphere2->center = glm::dvec3(2, -0.25, 0.75);
-	sphere2->ambient = glm::dvec3(0.0121, 0.0278, 0.0956);
-	sphere2->radius = .2;
+	sphere2->center = glm::dvec3(1.5, 1, -0.5);
+	sphere2->radius = 1;
 	sphere2->diffuse = glm::dvec3(.6, .3, .9);
 	sphere2->emission = glm::dvec3(0,0,0);
 	sphere2->shininess = .2;
@@ -58,25 +57,26 @@ int main()
 	//scene->add(sphere2);
 
 	sphere* sphere3 = new sphere();
-	sphere3->center = glm::dvec3(7, .5, -2.75);
-	sphere3->ambient = glm::dvec3(0,0,0);
+	sphere3->center = glm::dvec3(3, 0,0);
 	sphere3->radius = 2;
-	sphere3->diffuse = glm::dvec3(.2, .7, .3);
-	sphere3->emission = glm::dvec3(0,0,0);
+	sphere3->diffuse = glm::dvec3(.6, .3, .9);
+	sphere3->emission = glm::dvec3(.1,.1,.4);
 	sphere3->shininess = .2;
 	sphere3->specular = glm::dvec3(.43, .13, .32);
-	sphere3->reflectivity = 0.7;
-	//scene->add(sphere3);
+	sphere3->reflectivity = 0;
+	sphere3->refractiveIndex = 1.65;
+	sphere3->transparency = 1;
+	scene->add(sphere3);
 
 	sphere* sphere4 = new sphere();
-	sphere4->center = glm::dvec3(0, 0, -1);
-	sphere4->ambient = glm::dvec3(0,0,0);
-	sphere4->radius = 0.5;
+	sphere4->center = glm::dvec3(3, 0,1.5);
+	sphere4->radius = 1;
 	sphere4->diffuse = glm::dvec3(.54, .75, .69);
-	sphere4->emission = glm::dvec3(0,0,0);
+	sphere4->emission = glm::dvec3(.1, .1, .4);
 	sphere4->shininess = .5;
 	sphere4->specular = glm::dvec3(.23, .43, .13);
 	sphere4->reflectivity = 0;
+	sphere4->transparency = 0;
 	//scene->add(sphere4);
 
 	/*triangle* tri1 = new triangle();
@@ -146,7 +146,7 @@ int main()
 	-3.0 / 4.0, -1.0 / 4.0,
 	 1.0 / 4.0, -3.0 / 4.0,
 	};
-	const int samples = 1;
+	const int samples = 16;
 
 	double focallength = 6.0;
 	double aperture = 0.05;
@@ -167,14 +167,15 @@ int main()
 
 			for (int j = 0; j < WIDTH; j++)
 			{
-				glm::dvec3 pixColor = glm::dvec3(0, 0, 0);
+				glm::dvec3 pixColor = glm::dvec3(0,0,0);
 
+				scene->cur_i = i;
+				scene->cur_j = j;
 				//Simple
-				ray* temp = new ray();
+				/*ray* temp = new ray();
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
-				pixColor = scene->intersectray(*temp, 4);
-
-				/*
+				pixColor = scene->intersectray(*temp, MAXDEPTH);
+				delete temp;*/
 				//Implemeted (Fixed) SSAA (Super Sampling Anti Aliasing)       //Randomize Later
 				for (int sample = 0; sample < 5; ++sample) {
 
@@ -198,19 +199,19 @@ int main()
 					}
 					delete temp;
 				}
-				pixColor /= 5;*/
-				Color[i][j] = pixColor;
-				//Output_Image << (int)(255 * pixColor[0] / samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
+				
+				pixColor /= 5;
+				//Color[i][j] = pixColor;
+				Output_Image << (int)(255 * pixColor[0] / samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
 			}
 		}
-
-		for (int i =HEIGHT-1;i >=0;i--)
+		/*for (int i =HEIGHT-1;i >=0;i--)
 		{
 			for (int j = 0;j < WIDTH;j++)
 			{
 				Output_Image << (int)(255 * Color[i][j][0] / samples) << ' ' << (int)(255 * Color[i][j][1] / samples) << ' ' << (int)(255 * Color[i][j][2] / samples) << "\n";
 			}
-		}
+		}*/
 		progressBar.done();
 	}
 	Output_Image.close();

@@ -11,9 +11,10 @@ public:
 	glm::dvec3 diffuse;
 	glm::dvec3 specular;
 	glm::dvec3 emission;
-	glm::dvec3 ambient;
 	glm::dmat4 tranform;
-	double reflectivity;
+	int reflectivity;
+	int transparency;
+	double refractiveIndex;
 	double shininess;
 	virtual double intersect( ray& ray, glm::dvec3& normal) = 0;
 };
@@ -148,8 +149,6 @@ public:
 		{
 			std::vector<triangle*>::iterator meshItr = meshTri.begin();
 
-			triangle* int_object = nullptr;
-			glm::dvec3 int_point;
 			glm::dvec3 int_normal;
 			glm::dvec3 normal;
 
