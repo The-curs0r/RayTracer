@@ -11,12 +11,13 @@
 #include "light.hpp"
 #include "progressbar.hpp"
 #include "objImporter.hpp"
+#include "initScene.hpp"
 
 using namespace std;
 
-const int WIDTH = 600;
-const int HEIGHT = 400;
-const int MAXDEPTH = 3;
+const int WIDTH = 640;
+const int HEIGHT = 480;
+const int MAXDEPTH = 1;
 double CAMERA[] = { -4, 0, 0, 0, 0, 0, 0, 1, 0, 45 };
 //glm::dvec3 Color[HEIGHT][WIDTH];
 
@@ -24,27 +25,8 @@ int main()
 {
 
 	Scene* scene = new Scene();
-	//loadOBJ("./Models/Monkey.obj", scene);
 
-	sphere* sphere1 = new sphere();
-	sphere1->center = glm::dvec3(2.2, 1, 1.5);
-	sphere1->radius =1;
-	sphere1->diffuse = glm::dvec3(.6, .3, .9);
-	sphere1->emission = glm::dvec3(0,0,0);
-	sphere1->shininess = .2;
-	sphere1->specular = glm::dvec3(0, 0, 0);
-	sphere1->reflectivity = 1;
-	//scene->add(sphere1);
-
-	light* light1 = new light();
-	light1->attenuation = glm::dvec3(1, 0, 0);
-	light1->source = glm::dvec3(-3, -2, -2);
-	light1->type = 1;
-	light1->color = glm::dvec3(0.321, 0.898, 0.368);
-	light1->intensity = 2.0;
-	//scene->add(light1);
-
-	scene->ambientIntensity = 0.1 * 2.0;
+	init(scene,2);
 
 	sphere* sphere2 = new sphere();
 	sphere2->center = glm::dvec3(1.5, 1, -0.5);
@@ -53,6 +35,7 @@ int main()
 	sphere2->emission = glm::dvec3(0,0,0);
 	sphere2->shininess = .2;
 	sphere2->specular = glm::dvec3(.3, .3, .3);
+	sphere2->transparency = 0;
 	sphere2->reflectivity = 0;
 	//scene->add(sphere2);
 
@@ -66,7 +49,7 @@ int main()
 	sphere3->reflectivity = 0;
 	sphere3->refractiveIndex = 1.65;
 	sphere3->transparency = 1;
-	scene->add(sphere3);
+	//scene->add(sphere3);
 
 	sphere* sphere4 = new sphere();
 	sphere4->center = glm::dvec3(3, 0,1.5);
@@ -146,7 +129,7 @@ int main()
 	-3.0 / 4.0, -1.0 / 4.0,
 	 1.0 / 4.0, -3.0 / 4.0,
 	};
-	const int samples = 16;
+	const int samples = 32;
 
 	double focallength = 6.0;
 	double aperture = 0.05;
@@ -160,7 +143,7 @@ int main()
 	{
 		Output_Image << "P3\n" << WIDTH << " " << HEIGHT << " 255\n";
 
-		for (int i = HEIGHT-1; i >=0; i--)
+		for (int i = 0; i <HEIGHT; i++)
 		{
 			++progressBar;
 			progressBar.display();
@@ -176,6 +159,7 @@ int main()
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
 				pixColor = scene->intersectray(*temp, MAXDEPTH);
 				delete temp;*/
+				
 				//Implemeted (Fixed) SSAA (Super Sampling Anti Aliasing)       //Randomize Later
 				for (int sample = 0; sample < 5; ++sample) {
 

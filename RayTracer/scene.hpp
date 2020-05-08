@@ -64,6 +64,7 @@ public:
 		double minDistance = FLT_MAX;
 
 		glm::dvec3 outColor = glm::dvec3(1*cur_i/1080.0, 1* cur_i / 1080.0, 1* cur_i / 1080.0);
+		outColor = glm::dvec3(0,0,0);
 
 		std::vector<object*>::iterator objIterator = objects.begin();
 
@@ -126,7 +127,7 @@ public:
 				ray* reflected = new ray();
 				reflected->direction = rayIn.direction - (2 * glm::dot(rayIn.direction, int_normal)) * int_normal;
 				reflected->origin = int_point;
-				outColor += (intersectray(*reflected, depth - 1));
+				outColor += (intersectray(*reflected, depth - 1))*0.5;
 				delete reflected;
 			}
 			if (int_object->transparency)

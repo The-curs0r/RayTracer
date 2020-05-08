@@ -104,6 +104,7 @@ public:
 	glm::dvec3 boundMin;
 	glm::dvec3 boundMax;
 	bool intersect(ray& ray) {
+		//return true;
 		double tmin = (boundMin[0]-ray.origin[0])/ray.direction[0];
 		double tmax = (boundMax[0] - ray.origin[0]) / ray.direction[0];
 
@@ -165,7 +166,6 @@ public:
 					normal_ret = int_normal;
 				}
 			}
-			
 			return minDistance;
 		}
 		else

@@ -170,12 +170,12 @@ bool loadOBJ(const char* path,Scene* scene) {
 	}
 	//Set Other parameters
 	//meshtmp->ambient = glm::dvec3(0.3, 0.6, 0.5);
-	meshtmp->reflectivity = 0.5;
+	meshtmp->reflectivity = 1;
 	meshtmp->emission = glm::dvec3(0, 0, 0);
-
-	meshtmp->diffuse = glm::dvec3(.6, .3, .9);
+	meshtmp->transparency = 0;
+	meshtmp->diffuse = glm::dvec3(.2, .1, .3);
 	meshtmp->shininess = .2;
-	meshtmp->specular = glm::dvec3(.3, .3, .3);
+	meshtmp->specular = glm::dvec3(.45, .31, .77);
 
 	scene->add(meshtmp);
 

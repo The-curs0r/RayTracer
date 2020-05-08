@@ -141,10 +141,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="initScene.cpp" />
     <ClCompile Include="objImporter.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="initScene.hpp" />
     <ClInclude Include="light.hpp" />
     <ClInclude Include="object.hpp" />
     <ClInclude Include="objImporter.hpp" />
