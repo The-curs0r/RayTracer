@@ -5,6 +5,11 @@
 #include <Windows.h>
 #include <glm/glm.hpp>
 
+#include <omp.h>
+#include <cmath>
+
+#include <chrono>
+
 #include "ray.hpp"
 #include "object.hpp"
 #include "scene.hpp"
@@ -19,7 +24,7 @@ const int WIDTH = 640;
 const int HEIGHT = 480;
 const int MAXDEPTH = 1;
 double CAMERA[] = { -4, 0, 0, 0, 0, 0, 0, 1, 0, 45 };
-//glm::dvec3 Color[HEIGHT][WIDTH];
+glm::dvec3 Color[HEIGHT][WIDTH];
 
 int main()
 {
@@ -143,15 +148,17 @@ int main()
 	{
 		Output_Image << "P3\n" << WIDTH << " " << HEIGHT << " 255\n";
 
-		for (int i = 0; i <HEIGHT; i++)
+		auto start = std::chrono::high_resolution_clock::now();
+
+		for (int i = 0; i < HEIGHT; i++)
 		{
 			++progressBar;
 			progressBar.display();
-
+//#pragma omp parallel for
 			for (int j = 0; j < WIDTH; j++)
 			{
-				glm::dvec3 pixColor = glm::dvec3(0,0,0);
-
+				glm::dvec3 pixColor = glm::dvec3(0, 0, 0);
+				//std::cout << omp_get_num_threads()<<"\n";
 				scene->cur_i = i;
 				scene->cur_j = j;
 				//Simple
@@ -159,19 +166,19 @@ int main()
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
 				pixColor = scene->intersectray(*temp, MAXDEPTH);
 				delete temp;*/
-				
+
 				//Implemeted (Fixed) SSAA (Super Sampling Anti Aliasing)       //Randomize Later
 				for (int sample = 0; sample < 5; ++sample) {
 
 					ray* temp = new ray();
-					temp->raythrough(CAMERA, i+ jitterMatrix[2 * sample], j+ jitterMatrix[2 * sample+1], WIDTH, HEIGHT);
+					temp->raythrough(CAMERA, i + jitterMatrix[2 * sample], j + jitterMatrix[2 * sample + 1], WIDTH, HEIGHT);
 					//pixColor += scene->intersectray(*temp, 2);
 					//std::cout << &temp<<"\n";
-					glm::dvec3 focalPt = temp->origin + (focallength) * temp->direction;
+					glm::dvec3 focalPt = temp->origin + (focallength)*temp->direction;
 
 					//Depth Of Field
 					for (int divs = 0;divs < samples;divs++) {
-						
+
 						ray* rayInt = new ray();
 						glm::dvec3 shift = glm::dvec3(((double)rand() / (RAND_MAX)) - 0.5, ((double)rand() / (RAND_MAX)) - 0.5, ((double)rand() / (RAND_MAX)) - 0.5);
 						rayInt->origin = temp->origin + aperture * shift;
@@ -183,22 +190,34 @@ int main()
 					}
 					delete temp;
 				}
-				
+
 				pixColor /= 5;
-				//Color[i][j] = pixColor;
-				Output_Image << (int)(255 * pixColor[0] / samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
+				Color[i][j] = pixColor;
+				//Output_Image << (int)(255 * pixColor[0] / samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
 			}
 		}
-		/*for (int i =HEIGHT-1;i >=0;i--)
+		auto stop = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+
+		for (int i =0;i <HEIGHT;i++)
 		{
 			for (int j = 0;j < WIDTH;j++)
 			{
 				Output_Image << (int)(255 * Color[i][j][0] / samples) << ' ' << (int)(255 * Color[i][j][1] / samples) << ' ' << (int)(255 * Color[i][j][2] / samples) << "\n";
 			}
-		}*/
+		}
+		Output_Image.close();
+
+		ofstream Output_Image2("val.txt");
+		if (Output_Image2.is_open())
+		{
+			Output_Image2 << duration.count() << "\n";
+			Output_Image2.close();
+
+		}
 		progressBar.done();
 	}
-	Output_Image.close();
+	//Output_Image.close();
 	WinExec("cd ..", 1);
 	WinExec("magick \"./Output.ppm\" \"./Output.png\"", 1);
 	return 0;
