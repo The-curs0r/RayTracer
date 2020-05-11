@@ -6,7 +6,7 @@
 #include "light.hpp"
 #include <algorithm>
 #include <vector>
-
+#include "texture.hpp"
 
 #define epsilon_ pow(10,-12)
 
@@ -38,12 +38,13 @@ public:
 		double min_t = t_light;
 		object* nearest_obj = nullptr;
 		double t = FLT_MAX;
+		glm::dvec2 uvData;
 		glm::dvec3 normal = glm::dvec3(NULL, NULL, NULL);
 		std::vector<object*>::iterator it = objects.begin();
 
 		for (;it != objects.end();it++) {
 		
-			double t = (*it)->intersect(*nray, normal);
+			double t = (*it)->intersect(*nray, normal, uvData);
 			if (t < min_t && t>0 && t > epsilon_)
 			{
 				min_t = t;
@@ -56,15 +57,15 @@ public:
 		return true;
 	}
 
-	glm::dvec3 intersectray(ray& rayIn,int depth) {
-		
-		if (depth==0)
-			return glm::dvec3(0,0,0);
+	glm::dvec3 intersectray(ray& rayIn, int depth) {
+
+		if (depth == 0)
+			return glm::dvec3(0, 0, 0);
 
 		double minDistance = FLT_MAX;
 
-		glm::dvec3 outColor = glm::dvec3(1*cur_i/1080.0, 1* cur_i / 1080.0, 1* cur_i / 1080.0);
-		outColor = glm::dvec3(0,0,0);
+		glm::dvec3 outColor = glm::dvec3(1 * cur_i / 1080.0, 1 * cur_i / 1080.0, 1 * cur_i / 1080.0);
+		outColor = glm::dvec3(0, 0, 0);
 
 		std::vector<object*>::iterator objIterator = objects.begin();
 
@@ -72,16 +73,18 @@ public:
 		glm::dvec3 int_point;
 		glm::dvec3 int_normal;
 		glm::dvec3 normal;
+		glm::dvec2 uv_hit;
+
 		for (objIterator = objects.begin();objIterator != objects.end(); objIterator++) {
 			//Interesection with objects here
-			double intersection = (*objIterator)->intersect(rayIn,normal);
+			double intersection = (*objIterator)->intersect(rayIn, normal, uv_hit);
 
-			if (intersection < minDistance && intersection > epsilon_  )
+			if (intersection < minDistance && intersection > epsilon_)
 			{
 				int_normal = normal;
 				minDistance = intersection;
 				int_object = *objIterator;
-				if(glm::dot(rayIn.direction,int_normal)<0)
+				if (glm::dot(rayIn.direction, int_normal) < 0)
 					int_point = rayIn.origin + intersection * rayIn.direction + (epsilon_ * int_normal);
 				else
 					int_point = rayIn.origin + intersection * rayIn.direction - (epsilon_ * int_normal);
@@ -89,10 +92,17 @@ public:
 		}
 		if (int_object != nullptr)
 		{
-			outColor = (ambientIntensity*int_object->diffuse+int_object->emission)*0.5;
+			outColor = (ambientIntensity * int_object->diffuse + int_object->emission) * 0.5;
 
-			std::vector<light*>::iterator lightIterator = lights.begin();
-			
+			if (int_object->isTextured) {
+				//std::cout << uv_hit[0] << " " << uv_hit[1] << "\n";
+				outColor = (int_object->objTex)->value(uv_hit[0], uv_hit[1], int_point);
+				//outColor /= 255.0;
+				//std::cout << outColor[0]<<" " << outColor[1] <<" "<< outColor[2] << "\n";
+			}
+
+			/*std::vector<light*>::iterator lightIterator = lights.begin();
+
 			for ( lightIterator = lights.begin(); lightIterator != lights.end(); lightIterator++)
 			{
 				glm::dvec3 source = (*lightIterator)->source;
@@ -101,6 +111,7 @@ public:
 				if (checkvis(int_point, source)) {
 					//COLOR OBJECT AS IT IS VISIBLE
 					glm::dvec3 L = source - int_point;
+					double sourceDis = glm::dot(L, L);
 					if ((*lightIterator)->type == 0) L = (*lightIterator)->source;        //Directional light
 					L = glm::normalize(L);
 					glm::dvec3 H = glm::normalize(-rayIn.direction + L);
@@ -115,7 +126,7 @@ public:
 					{
 						phong = (*lightIterator)->color * int_object->specular * pow(glm::dot(int_normal, H), int_object->shininess);
 					}
-					outColor += ((*lightIterator)->intensity *(phong+lambert) / ((*lightIterator)->attenuation[0] + minDistance * (*lightIterator)->attenuation[1] + minDistance * minDistance * (*lightIterator)->attenuation[2])) ;
+					outColor += ((*lightIterator)->intensity *(phong+lambert) / ((*lightIterator)->attenuation[0] + sourceDis * (*lightIterator)->attenuation[1] + sourceDis * sourceDis * (*lightIterator)->attenuation[2])) ;
 				}
 			}
 
@@ -158,6 +169,8 @@ public:
 				}
 				delete refracted;
 			}
+		}*/
+			
 		}
 		return outColor;
 	}

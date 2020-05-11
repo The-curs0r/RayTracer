@@ -20,10 +20,10 @@
 
 using namespace std;
 
-const int WIDTH = 640;
-const int HEIGHT = 480;
+const int WIDTH = 2048;
+const int HEIGHT = 1024;
 const int MAXDEPTH = 1;
-double CAMERA[] = { -4, 0, 0, 0, 0, 0, 0, 1, 0, 45 };
+double CAMERA[] = { -4,0 , -4, 0, 0, 0, 0, 1, 0, 45 };
 glm::dvec3 Color[HEIGHT][WIDTH];
 
 int main()
@@ -31,7 +31,7 @@ int main()
 
 	Scene* scene = new Scene();
 
-	init(scene,2);
+	init(scene,3); 
 
 	sphere* sphere2 = new sphere();
 	sphere2->center = glm::dvec3(1.5, 1, -0.5);
@@ -134,9 +134,9 @@ int main()
 	-3.0 / 4.0, -1.0 / 4.0,
 	 1.0 / 4.0, -3.0 / 4.0,
 	};
-	const int samples = 32;
+	const int samples = 1;
 
-	double focallength = 6.0;
+	double focallength = 7.5;
 	double aperture = 0.05;
 	double planedis = glm::length(glm::dvec3(CAMERA[0], CAMERA[1], CAMERA[2]) - glm::dvec3(CAMERA[3], CAMERA[4], CAMERA[5]));
 
@@ -154,7 +154,7 @@ int main()
 		{
 			++progressBar;
 			progressBar.display();
-//#pragma omp parallel for
+#pragma omp parallel for
 			for (int j = 0; j < WIDTH; j++)
 			{
 				glm::dvec3 pixColor = glm::dvec3(0, 0, 0);
@@ -162,13 +162,13 @@ int main()
 				scene->cur_i = i;
 				scene->cur_j = j;
 				//Simple
-				/*ray* temp = new ray();
+				ray* temp = new ray();
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);
 				pixColor = scene->intersectray(*temp, MAXDEPTH);
-				delete temp;*/
+				delete temp;
 
 				//Implemeted (Fixed) SSAA (Super Sampling Anti Aliasing)       //Randomize Later
-				for (int sample = 0; sample < 5; ++sample) {
+				/*for (int sample = 0; sample < 5; ++sample) {
 
 					ray* temp = new ray();
 					temp->raythrough(CAMERA, i + jitterMatrix[2 * sample], j + jitterMatrix[2 * sample + 1], WIDTH, HEIGHT);
@@ -191,7 +191,7 @@ int main()
 					delete temp;
 				}
 
-				pixColor /= 5;
+				pixColor /= 5;*/
 				Color[i][j] = pixColor;
 				//Output_Image << (int)(255 * pixColor[0] / samples) << ' ' << (int)(255 * pixColor[1] / samples) << ' ' << (int)(255 * pixColor[2] / samples) << "\n";
 			}

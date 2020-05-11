@@ -165,7 +165,9 @@ bool loadOBJ(const char* path,Scene* scene) {
 			if (vertex2[i] > meshtmp->box.boundMax[i]) meshtmp->box.boundMax[i] = vertex2[i];
 			if (vertex3[i] > meshtmp->box.boundMax[i]) meshtmp->box.boundMax[i] = vertex3[i];
 		}
-
+		temptri->uv_v1 = uv1;
+		temptri->uv_v2 = uv2;
+		temptri->uv_v3 = uv3;
 		meshtmp->add(temptri);
 	}
 	//Set Other parameters

@@ -3,8 +3,10 @@
 
 #include "ray.hpp"
 #include <glm/glm.hpp>
+#include "texture.hpp"
 
 #define epsilon pow(10,-12)
+#define M_PI 3.14159
 
 class object {
 public:
@@ -14,9 +16,12 @@ public:
 	glm::dmat4 tranform;
 	int reflectivity;
 	int transparency;
+	int isTextured;
+	texture* objTex;
 	double refractiveIndex;
 	double shininess;
-	virtual double intersect( ray& ray, glm::dvec3& normal) = 0;
+	virtual double intersect( ray& ray, glm::dvec3& normal,glm::dvec2 &uv) = 0;
+	virtual void getuv(glm::dvec3& int_point, double& u, double& v) = 0;
 };
 
 class sphere : public object {
@@ -24,7 +29,7 @@ public:
 	glm::dvec3 center;
 	double radius;
 
-	double intersect( ray& ray, glm::dvec3& normal)  {
+	double intersect( ray& ray, glm::dvec3& normal, glm::dvec2& uv)  {
 		
 		/*glm::dvec3 toCenter = center - ray.origin;
 		double tca = glm::dot(toCenter, ray.direction);
@@ -64,7 +69,18 @@ public:
 		else
 			t = s1>s2?s2:s1;
 		normal = glm::normalize(ray.origin + t * ray.direction - center);
+		glm::dvec3 intersectionPoint = ray.origin + t * ray.direction;
+		intersectionPoint -= center;
+		intersectionPoint /= radius;
+		getuv(intersectionPoint, uv[0], uv[1]);
 		return t;
+	}
+	void getuv(glm::dvec3& int_point,double &u,double&v) {
+		double phi = atan2(int_point[2],int_point[0]);
+		double theta = asin(int_point[1]);
+		u = 1 - (phi + M_PI) / (2 * M_PI);
+		v = (theta + M_PI/2) / (M_PI);
+		//std::cout << int_point[1] << " " << v << "\n";
 	}
 };
 
@@ -74,7 +90,9 @@ public:
 	glm::dvec3 v2;
 	glm::dvec3 v3;
 	glm::dvec3 normal;
-
+	glm::dvec2 uv_v1;
+	glm::dvec2 uv_v2;
+	glm::dvec2 uv_v3;
 
 	//Check 
 	double intersect( ray& ray, glm::dvec3& normal_ret)  {
@@ -139,12 +157,13 @@ class mesh :public object {
 public:
 	std::vector<triangle*> meshTri;
 	boundBox box;
+	glm::dvec2 uv_cur;
 
 	void add(triangle* object) {
 		meshTri.push_back(object);
 	}
 
-	double intersect(ray& rayIn, glm::dvec3& normal_ret) {
+	double intersect(ray& rayIn, glm::dvec3& normal_ret,  glm::dvec2& uv) {
 		
 		if (box.intersect(rayIn))
 		{
@@ -152,6 +171,7 @@ public:
 
 			glm::dvec3 int_normal;
 			glm::dvec3 normal;
+			glm::dvec3 uv_int;
 
 			double minDistance = FLT_MAX;
 
@@ -170,6 +190,9 @@ public:
 		}
 		else
 			return -1;
+	}
+	void getuv(glm::dvec3& int_point, double& u, double& v) {
+		;
 	}
 };
 

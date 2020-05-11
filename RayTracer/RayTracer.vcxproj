@@ -147,6 +147,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="imageTexture.hpp" />
     <ClInclude Include="initScene.hpp" />
     <ClInclude Include="light.hpp" />
     <ClInclude Include="object.hpp" />
@@ -154,6 +155,8 @@
     <ClInclude Include="progressbar.hpp" />
     <ClInclude Include="ray.hpp" />
     <ClInclude Include="scene.hpp" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
