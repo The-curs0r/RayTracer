@@ -95,7 +95,7 @@ public:
 	glm::dvec2 uv_v3;
 
 	//Check 
-	double intersect( ray& ray, glm::dvec3& normal_ret)  {
+	double intersect( ray& ray, glm::dvec3& normal_ret, glm::dvec2& uv_int)  {
 
 		glm::dvec3 E1 = v2 - v1;
 		glm::dvec3 E2 = v3 - v1;
@@ -111,6 +111,18 @@ public:
 		double u = glm::dot(E2, DAO) * inndet;
 		double v = -glm::dot(E1, DAO) * inndet;
 		double t = glm::dot(AO, norm) * inndet;
+
+		glm::dvec3 int_point = ray.origin + t * ray.direction;
+		glm::dvec3 f1 = v1 - int_point;
+		glm::dvec3 f2 = v2 - int_point;
+		glm::dvec3 f3 = v3-int_point;
+
+		double a = glm::length(glm::cross(E1,E2));
+		double a1 = glm::length(glm::cross(f2, f3)) / a;
+		double a2 = glm::length(glm::cross(f3, f1)) / a;
+		double a3 = glm::length(glm::cross(f1, f2)) / a;
+
+		uv_int = uv_v1 * a1 + uv_v2 * a2 + uv_v3 * a3;
 
 		return((det >= epsilon && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0) ? t : -1);
 	}
@@ -171,19 +183,22 @@ public:
 
 			glm::dvec3 int_normal;
 			glm::dvec3 normal;
-			glm::dvec3 uv_int;
-
+			glm::dvec2 uv_int;
+			
 			double minDistance = FLT_MAX;
-
 			for (meshItr = meshTri.begin(); meshItr < meshTri.end(); meshItr++)
 			{
-				double intersection = (*meshItr)->intersect(rayIn, normal);
+				//std::cout << "here";
+				double intersection = (*meshItr)->intersect(rayIn, normal, uv_int);
+				//std::cout << intersection << "\n";
 				if (intersection < minDistance && intersection > epsilon)
 				{
 					//std::cout << "here";
 					int_normal = normal;
 					minDistance = intersection;
 					normal_ret = int_normal;
+					glm::dvec3 temp = glm::dvec3(uv_int[0],uv_int[1],0);
+					getuv(temp, uv[0], uv[1]);
 				}
 			}
 			return minDistance;
@@ -192,7 +207,9 @@ public:
 			return -1;
 	}
 	void getuv(glm::dvec3& int_point, double& u, double& v) {
-		;
+		u = int_point[0];
+		v = int_point[1];
+		return;
 	}
 };
 

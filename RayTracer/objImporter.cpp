@@ -77,7 +77,7 @@ bool loadOBJ(const char* path,Scene* scene) {
 		else if (strcmp(lineHeader, "vt") == 0) {
 			glm::dvec2 uv;
 			fscanf(file, "%lf %lf\n", &uv.x, &uv.y);
-			uv.y = -uv.y; // DDS texture are inverted.
+			uv.y = uv.y; // DDS texture are inverted.
 			temp_uvs.push_back(uv);
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
@@ -146,7 +146,7 @@ bool loadOBJ(const char* path,Scene* scene) {
 		temptri->v1 = vertex1;
 		temptri->v2 = vertex2;
 		temptri->v3 = vertex3;
-		//std::cout << vertex1[0] << " " << vertex1[1] << " " << vertex1[2] << "\n" << vertex2[0] << " " << vertex2[1] << " " << vertex2[2] << "\n" << vertex3[0] << " " << vertex3[1] << " " << vertex3[2] << "\n";
+		std::cout << uv1[0] << " " << uv1[1] << " " << "\n" << uv2[0] << " " << uv2[1] << " "  << "\n" << uv3[0] << " " << uv3[1] << " " << "\n";
 		glm::dvec3 edge1 = vertex2 - vertex1;
 		glm::dvec3 edge2 = vertex3 - vertex1;
 
@@ -171,13 +171,14 @@ bool loadOBJ(const char* path,Scene* scene) {
 		meshtmp->add(temptri);
 	}
 	//Set Other parameters
-	//meshtmp->ambient = glm::dvec3(0.3, 0.6, 0.5);
+
 	meshtmp->reflectivity = 1;
 	meshtmp->emission = glm::dvec3(0, 0, 0);
 	meshtmp->transparency = 0;
-	meshtmp->diffuse = glm::dvec3(.2, .1, .3);
+	meshtmp->diffuse = glm::dvec3(.5, .6, .7);
 	meshtmp->shininess = .2;
 	meshtmp->specular = glm::dvec3(.45, .31, .77);
+	meshtmp->isTextured = 1;
 
 	scene->add(meshtmp);
 

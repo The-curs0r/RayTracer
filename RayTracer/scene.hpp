@@ -81,6 +81,8 @@ public:
 
 			if (intersection < minDistance && intersection > epsilon_)
 			{
+				//std::cout << "here";
+
 				int_normal = normal;
 				minDistance = intersection;
 				int_object = *objIterator;
@@ -93,15 +95,15 @@ public:
 		if (int_object != nullptr)
 		{
 			outColor = (ambientIntensity * int_object->diffuse + int_object->emission) * 0.5;
-
 			if (int_object->isTextured) {
 				//std::cout << uv_hit[0] << " " << uv_hit[1] << "\n";
 				outColor = (int_object->objTex)->value(uv_hit[0], uv_hit[1], int_point);
+				//outColor = glm::dvec3(0,0,0);
 				//outColor /= 255.0;
 				//std::cout << outColor[0]<<" " << outColor[1] <<" "<< outColor[2] << "\n";
 			}
 
-			/*std::vector<light*>::iterator lightIterator = lights.begin();
+			std::vector<light*>::iterator lightIterator = lights.begin();
 
 			for ( lightIterator = lights.begin(); lightIterator != lights.end(); lightIterator++)
 			{
@@ -120,11 +122,19 @@ public:
 					glm::dvec3 phong = glm::dvec3(0, 0, 0);
 					if (glm::dot(int_normal, L) > 0)
 					{
-						lambert = (*lightIterator)->color * int_object->diffuse * (glm::dot(int_normal, L));
+						
+						if (!int_object->isTextured)
+						{
+							
+							lambert = (*lightIterator)->color * int_object->diffuse * (glm::dot(int_normal, L));
+						}
+						else
+							lambert = (*lightIterator)->color * (int_object->objTex)->value(uv_hit[0], uv_hit[1], int_point) * (glm::dot(int_normal, L));
 					}
 					if (glm::dot(int_normal, H) > 0)
 					{
-						phong = (*lightIterator)->color * int_object->specular * pow(glm::dot(int_normal, H), int_object->shininess);
+						if (!int_object->isTextured)
+							phong = (*lightIterator)->color * int_object->specular * pow(glm::dot(int_normal, H), int_object->shininess);
 					}
 					outColor += ((*lightIterator)->intensity *(phong+lambert) / ((*lightIterator)->attenuation[0] + sourceDis * (*lightIterator)->attenuation[1] + sourceDis * sourceDis * (*lightIterator)->attenuation[2])) ;
 				}
@@ -169,9 +179,9 @@ public:
 				}
 				delete refracted;
 			}
-		}*/
-			
 		}
+			
+		
 		return outColor;
 	}
 

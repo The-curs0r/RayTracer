@@ -20,18 +20,17 @@
 
 using namespace std;
 
-const int WIDTH = 2048;
-const int HEIGHT = 1024;
+const int WIDTH = 800;
+const int HEIGHT = 600;
 const int MAXDEPTH = 1;
-double CAMERA[] = { -4,0 , -4, 0, 0, 0, 0, 1, 0, 45 };
+double CAMERA[] = { -4,0 , 0, 0, 0, 0, 0, 1, 0, 45 };
 glm::dvec3 Color[HEIGHT][WIDTH];
 
 int main()
 {
-
 	Scene* scene = new Scene();
 
-	init(scene,3); 
+	init(scene,7); 
 
 	sphere* sphere2 = new sphere();
 	sphere2->center = glm::dvec3(1.5, 1, -0.5);
