@@ -57,7 +57,7 @@ bool loadOBJ(const char* path,Scene* scene) {
 
 	FILE* file = fopen(path, "r");
 	if (file == NULL) {
-		printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
+		printf("File not found.\n");
 		getchar();
 		return false;
 	}
@@ -90,7 +90,7 @@ bool loadOBJ(const char* path,Scene* scene) {
 			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
 			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
 			if (matches != 9) {
-				printf("File can't be read by our simple parser. Try exporting with other options\n");
+				printf("File can't be read.\n");
 				fclose(file);
 				return false;
 			}
@@ -112,11 +112,9 @@ bool loadOBJ(const char* path,Scene* scene) {
 	mesh* meshtmp = new mesh();
 	meshtmp->box.boundMax = glm::dvec3(FLT_MIN);
 	meshtmp->box.boundMin = glm::dvec3(FLT_MAX);
-	//double xmin=FLT_MIN, ymin = FLT_MIN, zmin = FLT_MIN;
-	//double xmax = FLT_MAX, ymax = FLT_MAX, zmax= FLT_MAX;
+	
 	// For each vertex of each triangle
 	for (unsigned int i = 0; i < vertexIndices.size(); i+=3) {
-
 		// Get the indices of its attributes
 		unsigned int vertexIndex1 = vertexIndices[i];
 		unsigned int vertexIndex2 = vertexIndices[i+1];

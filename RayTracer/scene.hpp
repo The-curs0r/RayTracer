@@ -65,7 +65,7 @@ public:
 		double minDistance = FLT_MAX;
 
 		glm::dvec3 outColor = glm::dvec3(1 * cur_i / 1080.0, 1 * cur_i / 1080.0, 1 * cur_i / 1080.0);
-		outColor = glm::dvec3(0, 0, 0);
+		outColor = glm::dvec3(0,0,0);
 
 		std::vector<object*>::iterator objIterator = objects.begin();
 
@@ -140,9 +140,6 @@ public:
 				}
 			}
 
-			rayIn.direction = glm::normalize(rayIn.direction);
-			int_normal = glm::normalize(int_normal);
-
 			if (int_object->reflectivity)
 			{
 				ray* reflected = new ray();
@@ -155,9 +152,9 @@ public:
 			{
 				ray* refracted = new ray();
 				if(glm::dot(rayIn.direction,int_normal)<0)
-					refracted->origin = int_point - 3 * epsilon_ * int_normal;
+					refracted->origin = int_point - 2 * epsilon_ * int_normal;
 				else
-					refracted->origin = int_point + 3 * epsilon_ * int_normal;
+					refracted->origin = int_point + 2 * epsilon_ * int_normal;
 
 				double cosi = glm::dot(rayIn.direction, int_normal);
 				double etai = 1;
@@ -172,7 +169,7 @@ public:
 				}
 				double eta = etai / etat;
 				double k = 1 - eta * eta * (1 - cosi * cosi);
-				if (k > 0)
+				if (k >= 0)
 				{
 					refracted->direction = glm::normalize(eta*rayIn.direction+(eta*cosi-sqrt(k))*normCpy);
 					outColor = (intersectray(*refracted, depth - 1));

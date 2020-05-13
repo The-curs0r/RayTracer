@@ -188,13 +188,31 @@ void init(Scene* scene, int sceneId) {
 	imageTexture* imgTex1 = new imageTexture(tex_dataload1, nx3, ny4);
 	scene->objects[1]->objTex = imgTex1;
 
-	/*light* light1 = new light();
-	light1->source = glm::dvec3(-4, 0, 0);
-	light1->attenuation = glm::dvec3(1, 0.1, 0.05);
-	light1->type = 1;
-	light1->color = glm::dvec3(1, 1, 1);
-	light1->intensity = 15.0;
-	scene->add(light1);*/
+	scene->ambientIntensity = 0.1 * 2.0;
+	}
+	else if (sceneId == 8) {
+
+	loadOBJ("./Models/Plane1.obj", scene);
+
+	int nx1 = 1920, ny1 = 1080;
+	int nn = 3;
+	unsigned char* tex_dataload = stbi_load("sky.jpg", &nx1, &ny1, &nn, 0);
+	imageTexture* imgTex = new imageTexture(tex_dataload, nx1, ny1);
+	/*sphere1->objTex = imgTex;*/
+	scene->objects[0]->objTex = imgTex;
+
+	sphere* sphere1 = new sphere();
+	sphere1->center = glm::dvec3(0, 0, 0);
+	sphere1->radius = 1;
+	sphere1->diffuse = glm::dvec3(.6, .3, .9);
+	sphere1->emission = glm::dvec3(0, 0, 0);
+	sphere1->shininess = 10;
+	sphere1->specular = glm::dvec3(0.2, 0.3, 0.4);
+	sphere1->transparency = 1;
+	sphere1->refractiveIndex = 2.0;
+	sphere1->reflectivity = 0;
+	sphere1->isTextured = 0;
+	scene->add(sphere1);
 
 	scene->ambientIntensity = 0.1 * 2.0;
 	}
