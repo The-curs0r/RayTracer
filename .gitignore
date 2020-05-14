@@ -19,7 +19,6 @@ RayTracer/Release/
 #Output images
 *.ppm
 *.png
-*.jpg
 *.mtl
 *.blend
 
