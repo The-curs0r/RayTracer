@@ -27,10 +27,6 @@ glm::dvec3 imageTexture::value(double u, double v, const glm::dvec3& p) const {
 	double g = int(data[3 * i + 3 * nx * j + 1]) / 255.0;
 	double b = int(data[3 * i + 3 * nx * j + 2]) / 255.0;
 
-	//double r = (i%255) / 255.0;
-	//double g = 0;
-	//double b = 0;
-
 	return glm::dvec3(r, g, b);
 }
 

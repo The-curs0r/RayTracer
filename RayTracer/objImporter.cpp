@@ -1,17 +1,3 @@
-/**
-	* File:    objImporter.cpp
-	*
-	* Author1:  Akshay Tiwari (2018A7PS0201H)
-	* Author2:  Mushkan Surekha  (2018B5A70477H)
-	* Author3:  Mahesh Swaminathan  (2018A4PS0982H)
-	* Date:     09-04-2020
-	* Course:   Computer Graphics (IS F311)
-	*
-	* Summary of File:
-	*
-	*   Program to import an obj file into required vectors
-	*	by using a simple parser.
-*/
 #include <vector>
 #include <stdio.h>
 #include <string>
@@ -23,30 +9,7 @@
 #include "object.hpp"
 
 using namespace std;
-/**
-	*   bool loadOBJ(const char* path,std::vector<glm::dvec3>& out_vertices,std::vector<glm::dvec2>& out_uvs,std::vector<glm::dvec3>& out_normals)
-	*
-	*   Summary of loadOBJ function:
-	*
-	*       Reads a .obj file and pushes vertices, uvs and normals to respective vectors
-	*
-	*   Parameters  :
-	*
-	*		const char* path - Path of the obj file
-	*		std::vector<glm::dvec3>& out_vertices - Vertex array (contains all the vertices)
-	*		std::vector<glm::dvec2>& out_uvs - UV arrat (contains all the UVs)
-	*		std::vector<glm::dvec3>& out_normals) - Normal array (contains all the normals)
-	*
-	*   Return Value :
-	*
-	*		Boolean value - True if file read successfully; else False
-	*
-	*   Description :
-	*
-	*       loadOBJ is simple file parser which reads .obj files and stores the vertices, uvs and normals
-	*		in their respective vectors.
-	*		This is a very simple file parser and can't read complex files.
-*/
+
 bool loadOBJ(const char* path,Scene* scene) {
 
 	printf("Loading OBJ file %s...\n", path);
@@ -77,7 +40,7 @@ bool loadOBJ(const char* path,Scene* scene) {
 		else if (strcmp(lineHeader, "vt") == 0) {
 			glm::dvec2 uv;
 			fscanf(file, "%lf %lf\n", &uv.x, &uv.y);
-			uv.y = uv.y; // DDS texture are inverted.
+			uv.y = uv.y;
 			temp_uvs.push_back(uv);
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
@@ -113,9 +76,8 @@ bool loadOBJ(const char* path,Scene* scene) {
 	meshtmp->box.boundMax = glm::dvec3(FLT_MIN);
 	meshtmp->box.boundMin = glm::dvec3(FLT_MAX);
 	
-	// For each vertex of each triangle
 	for (unsigned int i = 0; i < vertexIndices.size(); i+=3) {
-		// Get the indices of its attributes
+
 		unsigned int vertexIndex1 = vertexIndices[i];
 		unsigned int vertexIndex2 = vertexIndices[i+1];
 		unsigned int vertexIndex3 = vertexIndices[i+2];
@@ -126,7 +88,7 @@ bool loadOBJ(const char* path,Scene* scene) {
 		unsigned int normalIndex2 = normalIndices[i+1];
 		unsigned int normalIndex3 = normalIndices[i+2];
 
-		// Get the attributes thanks to the index
+
 		glm::dvec3 vertex1 = temp_vertices[vertexIndex1 - 1];
 		glm::dvec3 vertex2 = temp_vertices[vertexIndex2 - 1];
 		glm::dvec3 vertex3 = temp_vertices[vertexIndex3 - 1];
@@ -139,12 +101,11 @@ bool loadOBJ(const char* path,Scene* scene) {
 		glm::dvec3 normal2 = temp_normals[normalIndex2 - 1];
 		glm::dvec3 normal3 = temp_normals[normalIndex3 - 1];
 
-		// Generate triangle and calculate normal
 		triangle* temptri = new triangle();
 		temptri->v1 = vertex1;
 		temptri->v2 = vertex2;
 		temptri->v3 = vertex3;
-		std::cout << uv1[0] << " " << uv1[1] << " " << "\n" << uv2[0] << " " << uv2[1] << " "  << "\n" << uv3[0] << " " << uv3[1] << " " << "\n";
+		
 		glm::dvec3 edge1 = vertex2 - vertex1;
 		glm::dvec3 edge2 = vertex3 - vertex1;
 
@@ -168,12 +129,39 @@ bool loadOBJ(const char* path,Scene* scene) {
 		temptri->uv_v3 = uv3;
 		meshtmp->add(temptri);
 	}
-	//Set Other parameters
 
-	meshtmp->reflectivity = 1;
-	meshtmp->emission = glm::dvec3(0, 0, 0);
 	meshtmp->transparency = 0;
-	meshtmp->diffuse = glm::dvec3(.5, .6, .7);
+	
+	int inpRefl , inpShi, inpIsTex;
+	glm::dvec3 inpDif, inpSpec;
+	glm::dvec3 inpEmi = glm::dvec3(0, 0, 0);
+
+	std::cout<< "Is mesh reflective ? 0 : 1 == ";
+	std::cin >> inpRefl;
+
+	std::cout << "Is mesh textured ? 0 : 1 == ";
+	std::cin >> inpIsTex;
+
+	meshtmp->isTextured = inpIsTex;
+
+	if (!inpIsTex) {
+		std::cout << "Enter mesh's emissive color  rgb : ";
+		std::cin >> inpEmi[0] >> inpEmi[1] >> inpEmi[2];
+	}
+
+	std::cout << "Enter mesh's diffuse color  rgb : ";
+	std::cin >> inpDif[0] >> inpDif[1] >> inpDif[2];
+
+	std::cout << "Enter mesh's specular color  rgb : ";
+	std::cin >> inpSpec[0] >> inpSpec[1] >> inpSpec[2];
+
+	std::cout << "Enter mesh's shininess : ";
+	std::cin >> inpShi;
+
+	meshtmp->reflectivity = inpRefl;
+	meshtmp->emission = inpEmi;
+	
+	meshtmp->diffuse = inpDif;
 	meshtmp->shininess = .2;
 	meshtmp->specular = glm::dvec3(.45, .31, .77);
 	meshtmp->isTextured = 1;

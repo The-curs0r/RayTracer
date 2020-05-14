@@ -81,8 +81,6 @@ public:
 
 			if (intersection < minDistance && intersection > epsilon_)
 			{
-				//std::cout << "here";
-
 				int_normal = normal;
 				minDistance = intersection;
 				int_object = *objIterator;
@@ -96,11 +94,7 @@ public:
 		{
 			outColor = (ambientIntensity * int_object->diffuse + int_object->emission) * 0.5;
 			if (int_object->isTextured) {
-				//std::cout << uv_hit[0] << " " << uv_hit[1] << "\n";
 				outColor = (int_object->objTex)->value(uv_hit[0], uv_hit[1], int_point);
-				//outColor = glm::dvec3(0,0,0);
-				//outColor /= 255.0;
-				//std::cout << outColor[0]<<" " << outColor[1] <<" "<< outColor[2] << "\n";
 			}
 
 			std::vector<light*>::iterator lightIterator = lights.begin();
@@ -177,8 +171,6 @@ public:
 				delete refracted;
 			}
 		}
-			
-		
 		return outColor;
 	}
 

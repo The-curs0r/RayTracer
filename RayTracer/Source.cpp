@@ -20,8 +20,8 @@
 
 using namespace std;
 
-const int WIDTH = 1920;
-const int HEIGHT = 1080;
+const int WIDTH = 3840;
+const int HEIGHT = 2160;
 int MAXDEPTH = 1;
 double CAMERA[] = { -4,0 , 0, 0, 0, 0, 0, 1, 0, 45 };
 glm::dvec3 Color[HEIGHT][WIDTH];
@@ -46,9 +46,12 @@ int main()
 	-3.0 / 4.0, -1.0 / 4.0,
 	 1.0 / 4.0, -3.0 / 4.0,
 	};
-	const int samples = 16;
+	const int samples = 32;
 
-	double focallength = 7.5;
+	double focallength = 5.0;
+	std::cout << "Enter Focal Length : ";
+	std::cin >> focallength;
+
 	double aperture = 0.05;
 	double planedis = glm::length(glm::dvec3(CAMERA[0], CAMERA[1], CAMERA[2]) - glm::dvec3(CAMERA[3], CAMERA[4], CAMERA[5]));
 
@@ -79,7 +82,7 @@ int main()
 				pixColor = scene->intersectray(*temp, MAXDEPTH);
 				delete temp;*/
 
-				//Implemeted (Fixed) SSAA (Super Sampling Anti Aliasing)       //Randomize Later
+				//Implemeted (Fixed) SSAA (Super Sampling Anti Aliasing) 
 				for (int sample = 0; sample < 5; ++sample) {
 
 					ray* temp = new ray();
@@ -117,7 +120,6 @@ int main()
 		Output_Image.close();
 		progressBar.done();
 	}
-	//Output_Image.close();
 	WinExec("cd ..", 1);
 	WinExec("magick \"./Output.ppm\" \"./Output.png\"", 1);
 	return 0;

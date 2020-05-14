@@ -30,24 +30,7 @@ public:
 	double radius;
 
 	double intersect( ray& ray, glm::dvec3& normal, glm::dvec2& uv)  {
-		
-		/*glm::dvec3 toCenter = center - ray.origin;
-		double tca = glm::dot(toCenter, ray.direction);
-		double dis2 = glm::dot(toCenter, toCenter) - tca * tca;
-		if (dis2 > radius * radius) return -1;
-		double thc = glm::sqrt(radius * radius - dis2);
-		double t1 = tca - thc;
-		double t2 = tca + thc;
-
-		if (t1 > t2) std::std::swap(t1, t2);
-
-		if (t1 < 0) {
-			t1 = t2;
-			if (t1 < 0)
-				return -1;
-		}
-		normal = glm::normalize(ray.origin + t1 * ray.direction - center);
-		return t1;*/
+	
 		double c = glm::dot(ray.origin - center, ray.origin - center) - radius * radius;
 		double b = 2 * glm::dot(ray.direction, ray.origin - center);
 		double a = glm::dot(ray.direction, ray.direction);
@@ -80,7 +63,6 @@ public:
 		double theta = asin(int_point[1]);
 		u = 1 - (phi + M_PI) / (2 * M_PI);
 		v = (theta + M_PI/2) / (M_PI);
-		//std::cout << int_point[1] << " " << v << "\n";
 	}
 };
 
@@ -134,7 +116,7 @@ public:
 	glm::dvec3 boundMin;
 	glm::dvec3 boundMax;
 	bool intersect(ray& ray) {
-		//return true;
+		
 		double tmin = (boundMin[0]-ray.origin[0])/ray.direction[0];
 		double tmax = (boundMax[0] - ray.origin[0]) / ray.direction[0];
 
@@ -188,12 +170,9 @@ public:
 			double minDistance = FLT_MAX;
 			for (meshItr = meshTri.begin(); meshItr < meshTri.end(); meshItr++)
 			{
-				//std::cout << "here";
-				double intersection = (*meshItr)->intersect(rayIn, normal, uv_int);
-				//std::cout << intersection << "\n";
+				double intersection = (*meshItr)->intersect(rayIn, normal, uv_int);		
 				if (intersection < minDistance && intersection > epsilon)
 				{
-					//std::cout << "here";
 					int_normal = normal;
 					minDistance = intersection;
 					normal_ret = int_normal;
