@@ -16,9 +16,10 @@ glm/
 #Output-Directory
 Outputs/
 RayTracer/Release/
+
 #Output images
 *.ppm
-*.png
+*.jpg
 *.mtl
 *.blend
 
