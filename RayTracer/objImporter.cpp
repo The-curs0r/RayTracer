@@ -145,14 +145,14 @@ bool loadOBJ(const char* path,Scene* scene) {
 	meshtmp->isTextured = inpIsTex;
 
 	if (!inpIsTex) {
-		std::cout << "Enter mesh's emissive color  rgb : ";
+		std::cout << "Enter mesh's emissive color RGB : ";
 		std::cin >> inpEmi[0] >> inpEmi[1] >> inpEmi[2];
 	}
 
-	std::cout << "Enter mesh's diffuse color  rgb : ";
+	std::cout << "Enter mesh's diffuse color RGB : ";
 	std::cin >> inpDif[0] >> inpDif[1] >> inpDif[2];
 
-	std::cout << "Enter mesh's specular color  rgb : ";
+	std::cout << "Enter mesh's specular color RGB : ";
 	std::cin >> inpSpec[0] >> inpSpec[1] >> inpSpec[2];
 
 	std::cout << "Enter mesh's shininess : ";

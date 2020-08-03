@@ -73,9 +73,10 @@ int main()
 			for (int j = 0; j < WIDTH; j++)
 			{
 				glm::dvec3 pixColor = glm::dvec3(0, 0, 0);
-				//std::cout << omp_get_num_threads()<<"\n";
+
 				scene->cur_i = i;
 				scene->cur_j = j;
+
 				//Simple
 				/*ray* temp = new ray();
 				temp->raythrough(CAMERA, i , j , WIDTH, HEIGHT);

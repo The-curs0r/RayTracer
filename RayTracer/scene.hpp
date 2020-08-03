@@ -119,7 +119,6 @@ public:
 						
 						if (!int_object->isTextured)
 						{
-							
 							lambert = (*lightIterator)->color * int_object->diffuse * (glm::dot(int_normal, L));
 						}
 						else
