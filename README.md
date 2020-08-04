@@ -32,8 +32,8 @@ Currently I'm not working on this project but if you have any ideas for the proj
 * Improve lighting calculations (add glossy reflection and area lights).
 
 ## Results : 
+* More images in SampleImages folder.
 ![](SampleImages/Scene_4_Spheres4k.png)
 ![](SampleImages/Spheres.png)
 ![](SampleImages/LitJupiter.png)
-* More images in SampleImages folder.
 
