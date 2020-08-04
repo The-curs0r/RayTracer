@@ -94,7 +94,7 @@ int main()
 	double aperture = 0.05;
 	double planedis = glm::length(glm::dvec3(CAMERA[0], CAMERA[1], CAMERA[2]) - glm::dvec3(CAMERA[3], CAMERA[4], CAMERA[5]));
 
-	//ProgressBar
+	//ProgressBar from https://github.com/prakhar1989/progress-cpp
 	progresscpp::ProgressBar progressBar(HEIGHT, 70, '#', '-');
 
 	ofstream Output_Image("Output.ppm");

@@ -3,6 +3,8 @@
 #include <chrono>
 #include <iostream>
 
+//Epic progress bar from https://github.com/prakhar1989/progress-cpp
+
 namespace progresscpp {
     class ProgressBar {
     private:
