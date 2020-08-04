@@ -22,6 +22,7 @@ Implementation of a simple ray tracer in C++ .
 	
 ## Bug/Feature Request
 If you find a bug, or are unable to build the project or run the application, kindly open an issue [here](https://github.com/The-curs0r/RayTracer/issues/new?assignees=&labels=&template=bug_report.md&title=).
+
 Currently I'm not working on this project but if you have any ideas for the project, please put them [here](https://github.com/The-curs0r/RayTracer/issues/new?assignees=&labels=&template=feature_request.md&title=).
 
 ## To-Do
@@ -30,7 +31,9 @@ Currently I'm not working on this project but if you have any ideas for the proj
 * Add more basic shapes (like Torus, Cubes).
 * Improve lighting calculations (add glossy reflection and area lights).
 
-## Outputs : 
+## Results : 
 ![](SampleImages/Scene_4_Spheres4k.png)
 ![](SampleImages/Spheres.png)
 ![](SampleImages/LitJupiter.png)
+* More images in SampleImages folder.
+
