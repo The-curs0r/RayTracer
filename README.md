@@ -31,7 +31,7 @@ Currently I'm not working on this project but if you have any ideas for the proj
 * Add more basic shapes (like Torus, Cubes).
 * Improve lighting calculations (add glossy reflection and area lights).
 
-## Results : 
+## Results
 * More images in SampleImages folder.
 ![](SampleImages/Scene_4_Spheres4k.png)
 ![](SampleImages/Spheres.png)
