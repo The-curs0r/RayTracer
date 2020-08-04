@@ -56,7 +56,7 @@ int main()
 	std::cout << "Enter Maximum Number Of Ray Bounces : ";
 	std::cin >> MAXDEPTH;
 	if (MAXDEPTH > 35)	MAXDEPTH = 35;
-	if (MAXDEPTH < 0)	MAXDEPTH = 1;
+	if (MAXDEPTH <= 0)	MAXDEPTH = 1;
 
 	if (!init(scene, sceneId)) {
 		cout << "Unable to load the scene\n. Please try again.\n\n";
@@ -69,6 +69,7 @@ int main()
 	}
 
 	//SSAA Setup
+	//From this answer https://computergraphics.stackexchange.com/a/4253
 	double jitterMatrix[5 * 2] = {
 	0, 0,
 	-1.0 / 4.0,  3.0 / 4.0,
@@ -136,6 +137,7 @@ int main()
 						glm::dvec3 focalPt = temp->origin + (focallength)*temp->direction;
 
 						//Depth Of Field
+						//http://cg.skeelogy.com/depth-of-field-using-raytracing/
 						for (int divs = 0;divs < samples;divs++) {
 
 							ray* rayInt = new ray();
