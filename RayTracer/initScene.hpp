@@ -1,6 +1,6 @@
 #ifndef INITSCENEHPP
 #define INITSCENEHPP
 
-void init(Scene* scene, int sceneId);
+int init(Scene* scene, int sceneId);
 
 #endif // !INITSCENEHPP

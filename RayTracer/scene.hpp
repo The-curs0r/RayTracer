@@ -14,8 +14,9 @@ class Scene {
 public:
 	std::vector<object*> objects;
 	std::vector<light*> lights;
-	double ambientIntensity;
-	int cur_i;
+	double ambientIntensity=0.2;
+
+	int cur_i;	//What these two for?
 	int cur_j;
 
 	void add(object* object) {
@@ -64,8 +65,9 @@ public:
 
 		double minDistance = FLT_MAX;
 
-		glm::dvec3 outColor = glm::dvec3(1 * cur_i / 1080.0, 1 * cur_i / 1080.0, 1 * cur_i / 1080.0);
-		outColor = glm::dvec3(0,0,0);
+		//glm::dvec3 outColor = glm::dvec3(1 * cur_i / 1080.0, 1 * cur_i / 1080.0, 1 * cur_i / 1080.0);//What was this for?
+
+		glm::dvec3 outColor = glm::dvec3(0,0,0);
 
 		std::vector<object*>::iterator objIterator = objects.begin();
 

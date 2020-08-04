@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include <string>
 
 #include "light.hpp"
 #include "scene.hpp"
@@ -11,14 +12,28 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-void init(Scene* scene, int sceneId) {
+int init(Scene* scene, int sceneId) {
 	
+	std::cout << "If aksed for texture files, please use jpg images only\n";
+	if (sceneId > 9 || sceneId < 1) {
+		std::cout << "\nScene Not Found. Loading default scene. \n\n";
+	}
+	else
+		std::cout << "\nLoading Scene Number : " << sceneId << "\n\n";
+
 	if (sceneId == 1) {
 
-		loadOBJ("./Models/Floor3.obj", scene);
+		if(!loadOBJ("./Models/Floor.obj", scene, 1))	return 0;
 		int nx1 = 900, ny1 = 900;
 		int nn = 3;
-		unsigned char* tex_dataload = stbi_load("./Textures/Floor_2.jpg", &nx1, &ny1, &nn, 0);
+		std::string floorTex="./Textures/Floor_2.jpg";
+		std::cout << "Enter texture path for the floor texture : ";
+		std::cin >> floorTex;
+		unsigned char* tex_dataload = stbi_load(floorTex.c_str(), &nx1, &ny1, &nn, 0);
+		if (tex_dataload == nullptr) {
+			std::cout << "Unable to load : " << floorTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex = new imageTexture(tex_dataload, nx1, ny1);
 		scene->objects[0]->objTex = imgTex;
 
@@ -45,7 +60,7 @@ void init(Scene* scene, int sceneId) {
 	}
 	else if (sceneId == 2) {
 		
-		loadOBJ("./Models/Monkey.obj", scene);
+		if (!loadOBJ("./Models/Monkey.obj", scene, 0))return false;
 
 		light* light1 = new light();
 		light1->source = glm::dvec3(-1, 0, 0);
@@ -73,7 +88,14 @@ void init(Scene* scene, int sceneId) {
 
 		int nx1 = 2048, ny1 = 1024;
 		int nn = 3;
-		unsigned char* tex_dataload = stbi_load("./Textures/Jupiter.jpg", &nx1, &ny1, &nn, 0);
+		std::string jupiterTex = "./Textures/Jupiter.jpg";
+		std::cout << "Enter texture path for the planet texture : ";
+		std::cin >> jupiterTex;
+		unsigned char* tex_dataload = stbi_load(jupiterTex.c_str(), &nx1, &ny1, &nn, 0);
+		if (tex_dataload == nullptr) {
+			std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex = new imageTexture(tex_dataload,nx1,ny1);
 		sphere1->objTex = imgTex;
 
@@ -171,7 +193,14 @@ void init(Scene* scene, int sceneId) {
 
 		int nx1 = 2048, ny1 = 1024;
 		int nn = 3;
-		unsigned char* tex_dataload = stbi_load("./Textures/Jupiter.jpg", &nx1, &ny1, &nn, 0);
+		std::string jupiterTex = "./Textures/Jupiter.jpg";
+		std::cout << "Enter texture path for the planet texture : ";
+		std::cin >> jupiterTex;
+		unsigned char* tex_dataload = stbi_load(jupiterTex.c_str(), &nx1, &ny1, &nn, 0);
+		if (tex_dataload == nullptr) {
+			std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex = new imageTexture(tex_dataload, nx1, ny1);
 		scene->objects[0]->objTex = imgTex;
 
@@ -191,11 +220,18 @@ void init(Scene* scene, int sceneId) {
 	}
 	else if (sceneId == 6) {
 
-	loadOBJ("./Models/Plane1.obj", scene);
+	if (!loadOBJ("./Models/Plane1.obj", scene, 1)) return 0;
 
 	int nx1 = 2048, ny1 = 1024;
 	int nn = 3;
-	unsigned char* tex_dataload = stbi_load("./Textures/Stars.jpg", &nx1, &ny1, &nn, 0);
+	std::string starTex = "./Textures/Stars.jpg";
+	std::cout << "Enter texture path for the star texture : ";
+	std::cin >> starTex;
+	unsigned char* tex_dataload = stbi_load(starTex.c_str(), &nx1, &ny1, &nn, 0);
+	if (tex_dataload == nullptr) {
+		std::cout << "Unable to load : " << starTex << " . Please check the file path and try again\n";
+		return 0;
+	}
 	imageTexture* imgTex = new imageTexture(tex_dataload, nx1, ny1);
 	scene->objects[0]->objTex = imgTex;
 
@@ -213,7 +249,14 @@ void init(Scene* scene, int sceneId) {
 
 	int nx3 = 2000, ny4 = 1000;
 	int nn1 = 3;
-	unsigned char* tex_dataload1 = stbi_load("./Textures/Jupiter.jpg", &nx3, &ny4, &nn1, 0);
+	std::string jupiterTex = "./Textures/Jupiter.jpg";
+	std::cout << "Enter texture path for the planet texture : ";
+	std::cin >> jupiterTex;
+	unsigned char* tex_dataload1 = stbi_load(jupiterTex.c_str(), &nx3, &ny4, &nn1, 0);
+	if (tex_dataload1 == nullptr) {
+		std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+		return 0;
+	}
 	imageTexture* imgTex1 = new imageTexture(tex_dataload1, nx3, ny4);
 	scene->objects[1]->objTex = imgTex1;
 
@@ -221,20 +264,34 @@ void init(Scene* scene, int sceneId) {
 	}
 	else if (sceneId == 7) {
 
-	loadOBJ("./Models/Plane1.obj", scene);
+	if(!loadOBJ("./Models/Plane1.obj", scene,1))return 0;
 
 	int nx1 = 3840, ny1 = 2160;
 	int nn = 3;
-	unsigned char* tex_dataload = stbi_load("./Textures/Stars.jpg", &nx1, &ny1, &nn, 0);
+	std::string starTex = "./Textures/Stars.jpg";
+	std::cout << "Enter texture path for the star texture : ";
+	std::cin >> starTex;
+	unsigned char* tex_dataload = stbi_load(starTex.c_str(), &nx1, &ny1, &nn, 0);
+	if (tex_dataload == nullptr) {
+		std::cout << "Unable to load : " << starTex << " . Please check the file path and try again\n";
+		return 0;
+	}
 	imageTexture* imgTex = new imageTexture(tex_dataload, nx1, ny1);
 	/*sphere1->objTex = imgTex;*/
 	scene->objects[0]->objTex = imgTex;
 
-	loadOBJ("./Models/Sphere1Map.obj", scene);
+	if(!loadOBJ("./Models/Sphere1Map.obj", scene,1))return 0;
 
 	int nx3 = 2000, ny4 = 1000;
 	int nn1 = 3;
-	unsigned char* tex_dataload1 = stbi_load("./Textures/Jupiter.jpg", &nx3, &ny4, &nn1, 0);
+	std::string jupiterTex = "./Textures/Jupiter.jpg";
+	std::cout << "Enter texture path for the planet texture : ";
+	std::cin >> jupiterTex;
+	unsigned char* tex_dataload1 = stbi_load(jupiterTex.c_str(), &nx3, &ny4, &nn1, 0);
+	if (tex_dataload1 == nullptr) {
+		std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+		return 0;
+	}
 	imageTexture* imgTex1 = new imageTexture(tex_dataload1, nx3, ny4);
 	scene->objects[1]->objTex = imgTex1;
 
@@ -242,11 +299,18 @@ void init(Scene* scene, int sceneId) {
 	}
 	else if (sceneId == 8) {
 
-		loadOBJ("./Models/Plane1.obj", scene);
+		if(!loadOBJ("./Models/Plane1.obj", scene, 1))return 0;
 
 		int nx1 = 1920, ny1 = 1080;
 		int nn = 3;
-		unsigned char* tex_dataload = stbi_load("./Textures/Sky.jpg", &nx1, &ny1, &nn, 0);
+		std::string starTex = "./Textures/Sky.jpg";
+		std::cout << "Enter texture path for the sky texture : ";
+		std::cin >> starTex;
+		unsigned char* tex_dataload = stbi_load(starTex.c_str(), &nx1, &ny1, &nn, 0);
+		if (tex_dataload == nullptr) {
+			std::cout << "Unable to load : " << starTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex = new imageTexture(tex_dataload, nx1, ny1);
 		scene->objects[0]->objTex = imgTex;
 
@@ -279,7 +343,14 @@ void init(Scene* scene, int sceneId) {
 		sphere1->isTextured = 1;
 		int nx1 = 2048, ny1 = 1024;
 		int nn1 = 3;
-		unsigned char* tex_dataload1 = stbi_load("./Textures/Mercury.jpg", &nx1, &ny1, &nn1, 0);
+		std::string jupiterTex = "./Textures/Jupiter.jpg";
+		std::cout << "Enter texture path for the Mercury planet texture : ";
+		std::cin >> jupiterTex;
+		unsigned char* tex_dataload1 = stbi_load(jupiterTex.c_str(), &nx1, &ny1, &nn1, 0);
+		if (tex_dataload1 == nullptr) {
+			std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex1 = new imageTexture(tex_dataload1, nx1, ny1);
 		sphere1->objTex = imgTex1;
 		scene->add(sphere1);
@@ -296,7 +367,13 @@ void init(Scene* scene, int sceneId) {
 		sphere2->isTextured = 1;
 		int nx2 = 2048, ny2 = 1024;
 		int nn2 = 3;
-		unsigned char* tex_dataload2 = stbi_load("./Textures/Venus.jpg", &nx2, &ny2, &nn2, 0);
+		std::cout << "Enter texture path for the Venus planet texture : ";
+		std::cin >> jupiterTex;
+		unsigned char* tex_dataload2 = stbi_load(jupiterTex.c_str(), &nx2, &ny2, &nn2, 0);
+		if (tex_dataload2 == nullptr) {
+			std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex2 = new imageTexture(tex_dataload2, nx2, ny2);
 		sphere2->objTex = imgTex2;
 		scene->add(sphere2);
@@ -313,7 +390,13 @@ void init(Scene* scene, int sceneId) {
 		sphere3->isTextured = 1;
 		int nx3 = 2048, ny3 = 1024;
 		int nn3 = 3;
-		unsigned char* tex_dataload3 = stbi_load("./Textures/Earth.jpg", &nx3, &ny3, &nn3, 0);
+		std::cout << "Enter texture path for the Earth planet texture : ";
+		std::cin >> jupiterTex;
+		unsigned char* tex_dataload3 = stbi_load(jupiterTex.c_str(), &nx3, &ny3, &nn3, 0);
+		if (tex_dataload3 == nullptr) {
+			std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex3 = new imageTexture(tex_dataload3, nx3, ny3);
 		sphere3->objTex = imgTex3;
 		scene->add(sphere3);
@@ -330,7 +413,13 @@ void init(Scene* scene, int sceneId) {
 		sphere4->isTextured = 1;
 		int nx4 = 2048, ny4 = 1024;
 		int nn4 = 3;
-		unsigned char* tex_dataload4 = stbi_load("./Textures/Mars.jpg", &nx4, &ny4, &nn4, 0);
+		std::cout << "Enter texture path for the Mars planet texture : ";
+		std::cin >> jupiterTex;
+		unsigned char* tex_dataload4 = stbi_load(jupiterTex.c_str(), &nx4, &ny4, &nn4, 0);
+		if (tex_dataload4 == nullptr) {
+			std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex4 = new imageTexture(tex_dataload4, nx4, ny4);
 		sphere4->objTex = imgTex4;
 		scene->add(sphere4);
@@ -347,7 +436,13 @@ void init(Scene* scene, int sceneId) {
 		sphere5->isTextured = 1;
 		int nx5 = 2048, ny5 = 1024;
 		int nn5 = 3;
-		unsigned char* tex_dataload5 = stbi_load("./Textures/jupiter.jpg", &nx5, &ny5, &nn5, 0);
+		std::cout << "Enter texture path for the Jupiter planet texture : ";
+		std::cin >> jupiterTex;
+		unsigned char* tex_dataload5 = stbi_load(jupiterTex.c_str(), &nx5, &ny5, &nn5, 0);
+		if (tex_dataload5 == nullptr) {
+			std::cout << "Unable to load : " << jupiterTex << " . Please check the file path and try again\n";
+			return 0;
+		}
 		imageTexture* imgTex5 = new imageTexture(tex_dataload5, nx5, ny5);
 		sphere5->objTex = imgTex5;
 		scene->add(sphere5);
@@ -377,4 +472,5 @@ void init(Scene* scene, int sceneId) {
 
 		scene->ambientIntensity = 0.1 * 2.0;
 	}
+	return 1;
 }

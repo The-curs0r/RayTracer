@@ -3,14 +3,14 @@
 #include <string>
 #include <cstring>
 #include <iostream>
-#include <glm/glm.hpp>
+#include <glm.hpp>
 #include "objimporter.hpp"
 #include "scene.hpp"
 #include "object.hpp"
 
 using namespace std;
 
-bool loadOBJ(const char* path,Scene* scene) {
+bool loadOBJ(const char* path,Scene* scene,int textureFlag) {
 
 	printf("Loading OBJ file %s...\n", path);
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
@@ -131,40 +131,36 @@ bool loadOBJ(const char* path,Scene* scene) {
 	}
 
 	meshtmp->transparency = 0;
-	
-	int inpRefl , inpShi, inpIsTex;
-	glm::dvec3 inpDif, inpSpec;
+	meshtmp->isTextured = textureFlag;
+	int inpRefl=0.0 , inpShi=0.2;
+	glm::dvec3 inpDif= glm::dvec3(0, 0, 0), inpSpec= glm::dvec3(0, 0, 0);
 	glm::dvec3 inpEmi = glm::dvec3(0, 0, 0);
 
-	std::cout<< "Is mesh reflective ? 0 : 1 == ";
-	std::cin >> inpRefl;
+	if (!textureFlag) {
 
-	std::cout << "Is mesh textured ? 0 : 1 == ";
-	std::cin >> inpIsTex;
+		std::cout << "Is mesh reflective ? 0 : 1 == ";
+		std::cin >> inpRefl;
 
-	meshtmp->isTextured = inpIsTex;
-
-	if (!inpIsTex) {
 		std::cout << "Enter mesh's emissive color RGB : ";
 		std::cin >> inpEmi[0] >> inpEmi[1] >> inpEmi[2];
+
+		std::cout << "Enter mesh's diffuse color RGB : ";
+		std::cin >> inpDif[0] >> inpDif[1] >> inpDif[2];
+
+		std::cout << "Enter mesh's specular color RGB : ";
+		std::cin >> inpSpec[0] >> inpSpec[1] >> inpSpec[2];
+
+		std::cout << "Enter mesh's shininess : ";
+		std::cin >> inpShi;
 	}
-
-	std::cout << "Enter mesh's diffuse color RGB : ";
-	std::cin >> inpDif[0] >> inpDif[1] >> inpDif[2];
-
-	std::cout << "Enter mesh's specular color RGB : ";
-	std::cin >> inpSpec[0] >> inpSpec[1] >> inpSpec[2];
-
-	std::cout << "Enter mesh's shininess : ";
-	std::cin >> inpShi;
+	
 
 	meshtmp->reflectivity = inpRefl;
 	meshtmp->emission = inpEmi;
 	
 	meshtmp->diffuse = inpDif;
-	meshtmp->shininess = .2;
-	meshtmp->specular = glm::dvec3(.45, .31, .77);
-	meshtmp->isTextured = 1;
+	meshtmp->shininess = inpShi;
+	meshtmp->specular = inpSpec;
 
 	scene->add(meshtmp);
 

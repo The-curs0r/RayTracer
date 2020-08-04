@@ -2,7 +2,7 @@
 #define IMAGETEXTUREHPP
 
 #include "texture.hpp"
-#include <glm/glm.hpp>
+#include <glm.hpp>
 
 class imageTexture :public texture {
 public:

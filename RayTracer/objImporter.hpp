@@ -5,6 +5,7 @@
 
 bool loadOBJ(
 	const char* path,
-	Scene* scene
+	Scene* scene,
+	int textureFlag
 );
 #endif
