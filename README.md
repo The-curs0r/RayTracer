@@ -14,7 +14,7 @@ Implementation of a simple ray tracer in C++ .
 * That's it! Open the RayTracer.sln file and press Ctrl+B to build the project.
 * Go to the release folder and run the RayTracer.exe file. 
 	* If asked for textures, use only .jpg textures.
-	* Enter a scene ID between 0 and 9.
+	* Enter a scene ID between 1 and 9.
 * The result image is stored in a .ppm file which can be easily converted to any other format.
 * (Optional) If you want the result as .png directly :
 	* Install [ImageMagick](https://imagemagick.org/script/download.php) for Windows.
