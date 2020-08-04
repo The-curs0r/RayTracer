@@ -220,7 +220,7 @@ int init(Scene* scene, int sceneId) {
 	}
 	else if (sceneId == 6) {
 
-	if (!loadOBJ("./Models/Plane1.obj", scene, 1)) return 0;
+	if (!loadOBJ("./Models/Plane.obj", scene, 1)) return 0;
 
 	int nx1 = 2048, ny1 = 1024;
 	int nn = 3;
@@ -264,7 +264,7 @@ int init(Scene* scene, int sceneId) {
 	}
 	else if (sceneId == 7) {
 
-	if(!loadOBJ("./Models/Plane1.obj", scene,1))return 0;
+	if(!loadOBJ("./Models/Plane.obj", scene,1))return 0;
 
 	int nx1 = 3840, ny1 = 2160;
 	int nn = 3;
@@ -280,7 +280,7 @@ int init(Scene* scene, int sceneId) {
 	/*sphere1->objTex = imgTex;*/
 	scene->objects[0]->objTex = imgTex;
 
-	if(!loadOBJ("./Models/Sphere1Map.obj", scene,1))return 0;
+	if(!loadOBJ("./Models/Sphere.obj", scene,1))return 0;
 
 	int nx3 = 2000, ny4 = 1000;
 	int nn1 = 3;
@@ -299,7 +299,7 @@ int init(Scene* scene, int sceneId) {
 	}
 	else if (sceneId == 8) {
 
-		if(!loadOBJ("./Models/Plane1.obj", scene, 1))return 0;
+		if(!loadOBJ("./Models/Plane.obj", scene, 1))return 0;
 
 		int nx1 = 1920, ny1 = 1080;
 		int nn = 3;
