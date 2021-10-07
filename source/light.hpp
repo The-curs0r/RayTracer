@@ -1,7 +1,7 @@
 #ifndef LIGHT_HPP
 #define LIGHT_HPP
 
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 class light {
 public:

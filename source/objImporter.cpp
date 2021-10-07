@@ -3,7 +3,7 @@
 #include <string>
 #include <cstring>
 #include <iostream>
-#include <glm.hpp>
+#include <glm/glm.hpp>
 #include "objimporter.hpp"
 #include "scene.hpp"
 #include "object.hpp"

@@ -2,7 +2,7 @@
 #define OBJECT_HPP
 
 #include "ray.hpp"
-#include <glm.hpp>
+#include <glm/glm.hpp>
 #include "texture.hpp"
 
 #define epsilon pow(10,-12)

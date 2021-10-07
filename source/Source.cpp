@@ -2,7 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 #include <omp.h>
 #include <cmath>

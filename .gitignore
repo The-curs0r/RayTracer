@@ -23,6 +23,7 @@ RayTracer/Release/
 *.blend
 
 # Build results
+build/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
